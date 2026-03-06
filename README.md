@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/25782393/README.md)
 AxeOS Fleet Manager v1.0.0 - Initial Release 🚀
 
 
