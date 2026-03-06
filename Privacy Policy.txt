@@ -1,0 +1,13 @@
+AxeOS Fleet Manager - Privacy Policy
+
+1. Data Collection and Usage
+AxeOS Fleet Manager is designed to operate entirely locally. The extension does not collect, transmit, track, or store any personal data, analytics, or telemetry on external servers.
+
+2. Local Network Activity
+The extension requires permissions to communicate with devices on your local network (LAN) using HTTP. This is strictly to fetch device statuses (like hashrate and temperature) and to send configuration commands (like changing mining pools or restarting the device) directly to your hardware.
+
+3. Local Storage
+Any data saved by the extension—such as your saved mining pools, custom device names, dashboard layout, and hashrate history—is stored exclusively on your own computer using Chrome's local storage (chrome.storage.local). We do not have access to this data.
+
+4. Third Parties
+We do not sell, trade, or transfer any user data to outside parties, as we do not collect any data in the first place.

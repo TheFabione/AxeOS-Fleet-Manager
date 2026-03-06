@@ -1,0 +1,124 @@
+/* ═══════════════════════════════════════════════════
+   AxeOS Fleet Manager — Color Themes
+   5 Dark + 5 Light = 10 total themes
+   ═══════════════════════════════════════════════════ */
+
+/* ─── DARK 1: Midnight Orange (Default) ─── */
+[data-theme="midnight-orange"] {
+  --bg-deep:#08080f;--bg-base:#0d0d1a;--bg-card:#12122a;--bg-card-hover:#181838;--bg-input:#0a0a18;
+  --border:#1e1e3a;--border-hover:#2a2a50;
+  --text-primary:#e8e8f0;--text-secondary:#8888a8;--text-muted:#555570;
+  --accent:#f7931a;--accent-hover:#ffaa33;--accent-glow:rgba(247,147,26,.15);
+  --green:#22c55e;--green-dim:rgba(34,197,94,.15);--red:#ef4444;--red-dim:rgba(239,68,68,.15);
+  --blue:#3b82f6;--blue-dim:rgba(59,130,246,.15);--yellow:#eab308;
+  --chart-line:#f7931a;--chart-fill-a:rgba(247,147,26,.25);--chart-fill-b:rgba(247,147,26,0);
+  --topbar-bg:rgba(13,13,26,.92);
+}
+
+/* ─── DARK 2: Cyber Green ─── */
+[data-theme="cyber-green"] {
+  --bg-deep:#060d08;--bg-base:#0a150d;--bg-card:#0f1f14;--bg-card-hover:#14291a;--bg-input:#071009;
+  --border:#1a3320;--border-hover:#265530;
+  --text-primary:#d8f0dd;--text-secondary:#7aac85;--text-muted:#4a7050;
+  --accent:#00e676;--accent-hover:#33ff99;--accent-glow:rgba(0,230,118,.12);
+  --green:#00e676;--green-dim:rgba(0,230,118,.15);--red:#ff5252;--red-dim:rgba(255,82,82,.15);
+  --blue:#40c4ff;--blue-dim:rgba(64,196,255,.15);--yellow:#ffd740;
+  --chart-line:#00e676;--chart-fill-a:rgba(0,230,118,.2);--chart-fill-b:rgba(0,230,118,0);
+  --topbar-bg:rgba(10,21,13,.92);
+}
+
+/* ─── DARK 3: Deep Purple ─── */
+[data-theme="deep-purple"] {
+  --bg-deep:#0a0810;--bg-base:#110e1c;--bg-card:#1a1530;--bg-card-hover:#221c3e;--bg-input:#0d0a16;
+  --border:#2a2248;--border-hover:#3a3060;
+  --text-primary:#e8e0f8;--text-secondary:#9888c0;--text-muted:#605080;
+  --accent:#b388ff;--accent-hover:#d0aaff;--accent-glow:rgba(179,136,255,.12);
+  --green:#69f0ae;--green-dim:rgba(105,240,174,.15);--red:#ff5252;--red-dim:rgba(255,82,82,.15);
+  --blue:#82b1ff;--blue-dim:rgba(130,177,255,.15);--yellow:#ffd740;
+  --chart-line:#b388ff;--chart-fill-a:rgba(179,136,255,.2);--chart-fill-b:rgba(179,136,255,0);
+  --topbar-bg:rgba(17,14,28,.92);
+}
+
+/* ─── DARK 4: Crimson Night ─── */
+[data-theme="crimson-night"] {
+  --bg-deep:#0f0808;--bg-base:#1a0e0e;--bg-card:#281414;--bg-card-hover:#351a1a;--bg-input:#140a0a;
+  --border:#3a1e1e;--border-hover:#502a2a;
+  --text-primary:#f0e0e0;--text-secondary:#c08888;--text-muted:#805555;
+  --accent:#ff5252;--accent-hover:#ff7777;--accent-glow:rgba(255,82,82,.12);
+  --green:#69f0ae;--green-dim:rgba(105,240,174,.15);--red:#ff5252;--red-dim:rgba(255,82,82,.15);
+  --blue:#82b1ff;--blue-dim:rgba(130,177,255,.15);--yellow:#ffd740;
+  --chart-line:#ff5252;--chart-fill-a:rgba(255,82,82,.2);--chart-fill-b:rgba(255,82,82,0);
+  --topbar-bg:rgba(26,14,14,.92);
+}
+
+/* ─── DARK 5: Arctic Blue ─── */
+[data-theme="arctic-blue"] {
+  --bg-deep:#060a10;--bg-base:#0a1018;--bg-card:#101a28;--bg-card-hover:#152235;--bg-input:#070c14;
+  --border:#1a2a40;--border-hover:#253a55;
+  --text-primary:#dce8f0;--text-secondary:#7899b8;--text-muted:#4a6680;
+  --accent:#29b6f6;--accent-hover:#4fc3f7;--accent-glow:rgba(41,182,246,.12);
+  --green:#66bb6a;--green-dim:rgba(102,187,106,.15);--red:#ef5350;--red-dim:rgba(239,83,80,.15);
+  --blue:#29b6f6;--blue-dim:rgba(41,182,246,.15);--yellow:#ffca28;
+  --chart-line:#29b6f6;--chart-fill-a:rgba(41,182,246,.2);--chart-fill-b:rgba(41,182,246,0);
+  --topbar-bg:rgba(10,16,24,.92);
+}
+
+/* ─── LIGHT 1: Clean Amber ─── */
+[data-theme="clean-amber"] {
+  --bg-deep:#f5f3ef;--bg-base:#faf8f5;--bg-card:#ffffff;--bg-card-hover:#fef9f0;--bg-input:#f0ede6;
+  --border:#e0dcd2;--border-hover:#ccc6b8;
+  --text-primary:#1a1612;--text-secondary:#6b6050;--text-muted:#9a9080;
+  --accent:#e8750a;--accent-hover:#d06808;--accent-glow:rgba(232,117,10,.1);
+  --green:#16a34a;--green-dim:rgba(22,163,74,.1);--red:#dc2626;--red-dim:rgba(220,38,38,.1);
+  --blue:#2563eb;--blue-dim:rgba(37,99,235,.1);--yellow:#ca8a04;
+  --chart-line:#e8750a;--chart-fill-a:rgba(232,117,10,.15);--chart-fill-b:rgba(232,117,10,0);
+  --topbar-bg:rgba(250,248,245,.95);
+}
+
+/* ─── LIGHT 2: Mint Fresh ─── */
+[data-theme="mint-fresh"] {
+  --bg-deep:#eef5f0;--bg-base:#f5faf6;--bg-card:#ffffff;--bg-card-hover:#f0faf2;--bg-input:#e8f0ea;
+  --border:#c8dccb;--border-hover:#aaccb0;
+  --text-primary:#12201a;--text-secondary:#3a6b48;--text-muted:#6a9a78;
+  --accent:#059669;--accent-hover:#047857;--accent-glow:rgba(5,150,105,.1);
+  --green:#059669;--green-dim:rgba(5,150,105,.1);--red:#dc2626;--red-dim:rgba(220,38,38,.1);
+  --blue:#0284c7;--blue-dim:rgba(2,132,199,.1);--yellow:#ca8a04;
+  --chart-line:#059669;--chart-fill-a:rgba(5,150,105,.15);--chart-fill-b:rgba(5,150,105,0);
+  --topbar-bg:rgba(245,250,246,.95);
+}
+
+/* ─── LIGHT 3: Soft Lavender ─── */
+[data-theme="soft-lavender"] {
+  --bg-deep:#f0eef5;--bg-base:#f5f3fa;--bg-card:#ffffff;--bg-card-hover:#f5f0ff;--bg-input:#eae6f2;
+  --border:#d0c8e0;--border-hover:#b8aad0;
+  --text-primary:#1a1025;--text-secondary:#5a4880;--text-muted:#8070a0;
+  --accent:#7c3aed;--accent-hover:#6d28d9;--accent-glow:rgba(124,58,237,.1);
+  --green:#16a34a;--green-dim:rgba(22,163,74,.1);--red:#dc2626;--red-dim:rgba(220,38,38,.1);
+  --blue:#3b82f6;--blue-dim:rgba(59,130,246,.1);--yellow:#ca8a04;
+  --chart-line:#7c3aed;--chart-fill-a:rgba(124,58,237,.15);--chart-fill-b:rgba(124,58,237,0);
+  --topbar-bg:rgba(245,243,250,.95);
+}
+
+/* ─── LIGHT 4: Paper Rose ─── */
+[data-theme="paper-rose"] {
+  --bg-deep:#f5eeef;--bg-base:#faf5f6;--bg-card:#ffffff;--bg-card-hover:#fff0f2;--bg-input:#f0e6e8;
+  --border:#e0c8cc;--border-hover:#d0aab0;
+  --text-primary:#201215;--text-secondary:#804050;--text-muted:#a06878;
+  --accent:#e11d48;--accent-hover:#be123c;--accent-glow:rgba(225,29,72,.1);
+  --green:#16a34a;--green-dim:rgba(22,163,74,.1);--red:#e11d48;--red-dim:rgba(225,29,72,.1);
+  --blue:#3b82f6;--blue-dim:rgba(59,130,246,.1);--yellow:#ca8a04;
+  --chart-line:#e11d48;--chart-fill-a:rgba(225,29,72,.15);--chart-fill-b:rgba(225,29,72,0);
+  --topbar-bg:rgba(250,245,246,.95);
+}
+
+/* ─── LIGHT 5: Sky Slate ─── */
+[data-theme="sky-slate"] {
+  --bg-deep:#eff2f5;--bg-base:#f5f7fa;--bg-card:#ffffff;--bg-card-hover:#f0f5ff;--bg-input:#e6eaf0;
+  --border:#c8d0dc;--border-hover:#a8b5c8;
+  --text-primary:#121820;--text-secondary:#405060;--text-muted:#708090;
+  --accent:#0369a1;--accent-hover:#0284c7;--accent-glow:rgba(3,105,161,.1);
+  --green:#16a34a;--green-dim:rgba(22,163,74,.1);--red:#dc2626;--red-dim:rgba(220,38,38,.1);
+  --blue:#0369a1;--blue-dim:rgba(3,105,161,.1);--yellow:#ca8a04;
+  --chart-line:#0369a1;--chart-fill-a:rgba(3,105,161,.15);--chart-fill-b:rgba(3,105,161,0);
+  --topbar-bg:rgba(245,247,250,.95);
+}
