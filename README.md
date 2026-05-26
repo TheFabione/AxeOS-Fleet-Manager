@@ -2,9 +2,9 @@
 
 **Manage and monitor your entire BitAxe & NerdQAxe SHA-256 mining fleet from one Chrome extension.**
 
-Scan your local network, watch hashrate and difficulty in real time, switch pools across multiple devices at once, and automate routine maintenance — all without opening a single device web page.
+Scan your local network, watch hashrate and difficulty in real time, stream live device logs, catch the moment you solve a block, switch pools across multiple devices at once, and automate routine maintenance — all without opening a single device web page.
 
-![Version](https://img.shields.io/badge/version-1.0.11-06B6D4) ![Manifest](https://img.shields.io/badge/Manifest-V3-blue) ![Devices](https://img.shields.io/badge/devices-BitAxe%20%7C%20NerdQAxe-f7931a)
+![Version](https://img.shields.io/badge/version-1.6.1-C8F73A) ![Manifest](https://img.shields.io/badge/Manifest-V3-blue) ![Devices](https://img.shields.io/badge/devices-BitAxe%20%7C%20NerdQAxe-8B5CF6)
 
 ---
 
@@ -20,13 +20,20 @@ AxeOS Fleet Manager pulls every device into a single dashboard. One place to see
 
 ### Monitoring
 - **Auto-discovery** — scan your subnet to find every device, or add them manually by IP
-- **Live dashboard** — hashrate, best difficulty, and temperature front-and-center on each device card; expand for full details (power, fan, shares, firmware, voltages, uptime, WiFi)
+- **Live device cards** — three view modes (Minimal, Balanced, Detailed) let you choose how much each card shows, from a compact name-and-hashrate strip up to a full readout with a live hashrate sparkline, efficiency (J/TH), power, pool, and share counts
+- **Live logs** — open a real-time log console for any device, streamed over WebSocket, with pause, clear, and smart auto-scroll
+- **Live difficulty** — stream the real per-share difficulty of a device and watch every share land in real time
 - **Fleet overview** — total hashrate, accepted/rejected shares, power draw, average temperature, and best difficulty at a glance
-- **Fleet Hashrate chart** — interactive history with hover tooltips and online/offline device counts
-- **Live Difficulty chart** — a real-time, fluctuating view of the difficulty your devices produce each interval, with gradient fills, highlighted peaks, and a per-device toggle
+- **Fleet Hashrate chart** — interactive history with hover tooltips, online/offline counts, and block-found markers
+- **Uptime monitor** — a persistent status bar that tracks which devices go offline and when they recover, with full timestamped history
+
+### Block detection
+- **Catch your blocks** — when a device solves a block you get a celebration with confetti and the details, including the **actual difficulty your miner reached** to find it
+- **Block history** — every block is saved behind the navbar trophy, with an unread-style counter and markers on the hashrate chart
 
 ### Control
 - **Pool Manager** — save unlimited pool profiles per coin; apply to multiple devices in one click with a live progress bar and per-device status icons
+- **Pool import/export** — back up your saved pools to a JSON file and restore them anywhere
 - **Smart URL parsing** — paste `stratum+tcp://host:port` and the host and port are split automatically
 - **Worker suffixes** — device names are appended to your wallet automatically (`wallet.devicename`)
 - **Per-device settings** — fan control, frequency, voltage, and pool configuration
@@ -41,7 +48,7 @@ AxeOS Fleet Manager pulls every device into a single dashboard. One place to see
 ### Organization & Accessibility
 - **Custom labels** — up to two colored tags per device, usable as filters
 - **Sorting** — by hashrate, difficulty, temperature, uptime, name, or IP, plus drag-and-drop custom order with a lock
-- **6 themes** — 3 dark (Tech Midnight, Slate Neon, Material Dark) and 3 light (Cloud Cyan, Silk Violet, Paper Teal)
+- **Two finished themes** — **Neon Vault** (dark) and **Solar Light** (light)
 - **°C / °F toggle** and **font scaling** for comfortable viewing
 - **Built-in User Guide** — full documentation inside the dashboard
 
@@ -55,7 +62,7 @@ AxeOS Fleet Manager pulls every device into a single dashboard. One place to see
 4. Click **Load unpacked** and select the unzipped folder.
 5. Click the extension icon, open the dashboard, and follow the setup wizard.
 
-> Requires devices running AxeOS firmware reachable on your local network.
+> Requires devices running AxeOS / ESP-Miner firmware reachable on your local network.
 
 ---
 
@@ -78,7 +85,9 @@ AxeOS devices protect write operations (changing pools, restarting) with a sessi
 
 AxeOS Fleet Manager solves this by briefly opening the device's own page in a background tab and running the request from inside that page's context — same-origin, with the session cookie attached automatically. The tab opens and closes in a flash; you just see the action succeed. Read-only monitoring uses ordinary direct requests.
 
-The extension is built on **Manifest V3** with a service worker for network scanning and reads, and all write actions routed through the tab-injection mechanism. No external runtime dependencies.
+The same technique powers live streaming: an insecure `ws://` WebSocket can't be opened from the extension's secure origin, so live logs and live difficulty run the WebSocket inside the device's own page and relay each line back to the dashboard — exactly how the device's own web UI streams its logs.
+
+The extension is built on **Manifest V3** with a service worker for network scanning and reads, and all write and streaming actions routed through the tab-injection mechanism. No external runtime dependencies.
 
 ---
 
@@ -87,7 +96,7 @@ The extension is built on **Manifest V3** with a service worker for network scan
 - **BitAxe** (all AxeOS models)
 - **NerdQAxe / NerdQAxe++**
 
-> Note: NerdQAxe firmware has deprecated automatic fan control, so the extension exposes manual fan speed only for those devices.
+> Notes: NerdQAxe firmware has deprecated automatic fan control, so the extension exposes manual fan speed only for those devices. BitAxe firmware does not expose a 24-hour hashrate average, so its cards fall back to the 1-hour average.
 
 ---
 
