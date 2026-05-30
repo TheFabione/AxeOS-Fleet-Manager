@@ -1,4 +1,46 @@
 # AxeOS Fleet Manager - Changelog
+ 
+## v1.6.7 - Theme Picker Polish (May 2026)
+- The theme dropdown no longer shows an empty "Light" group; if all available themes are in a single group, options are listed directly without category labels
+- Sparkline mini-charts in device cards now redraw immediately when you switch themes, instead of waiting for the next refresh to pick up the new colors
+  
+## v1.6.6 - Hotfix (May 2026)
+- **Fixed**: critical bug where hovering over the Fleet Hashrate or Live Difficulty chart caused the chart to grow vertically without bound, eventually filling the screen. Caused by a flex layout conflict with the explicit canvas height; the chart card now uses a stable `min-height` strategy with single-line headers.
+  
+## v1.6.5 - Supra Firmware Support, New Theme (May 2026)
+- **New theme: Aurora** - replaces Solar Light with a second fully designed dark theme. Cyan + magenta + amber on deep midnight navy, distinctly different from Neon Vault while equally polished.
+- **BitAxe Supra firmware support**: the newer Supra firmware only exposes the current hashrate (no `hashRate_1h`/`_10m`/`_1m` fields). The card's 1h and 24h averages now fall back to a rolling average computed locally from the dashboard's own sample buffer, which is now sized for one hour of history.
+- **Fixed**: the OFFLINE pill could persist on a card after the device came back online. The in-place updater now manages the pill dynamically.
+- **Fixed**: the Fleet Hashrate and Live Difficulty charts now have identical heights (the Live Difficulty header was wrapping to a second line on tighter widths).
+
+## v1.6.4 - Flap Recovery, Device Import/Export, Better Live Difficulty (May 2026)
+- **New automation: Flap Recovery**. Some boards enter an unstable offline/online cycle. The new automation watches recovery events and, if a device flaps more than N times within a configurable window, automatically restarts it once the device is reachable again. Cooldown prevents repeated triggering.
+- **Export and import devices**: back up the entire device list (IPs, nicknames, labels, custom icons, custom order) to a JSON file and restore it on a fresh install in one click. New icons in the device controls area. Unreachable IPs are kept as placeholders so their names and labels apply once they come back online.
+- **Live Difficulty chart now reflects the device's real session best**, even when the live stream hasn't captured a high share yet:
+  - A dashed reference line at the device's current `bestSessionDiff` value, with a label
+  - The chart's Y axis auto-expands to include this reference
+  - Live mode seeds an initial point at the current session best so it's visible from the start
+  - Buffer increased from 300 to 600 points for longer history
+
+## v1.6.3 - Badge & Modal Polish (May 2026)
+- **Block counter badge** redesigned: smaller, positioned at the bottom-left of the trophy icon (no longer deforming it), with a theme-consistent circular background and a subtle glow.
+- **Blocks Found modal** redesigned: each block is now a card with a colored left border by device type, a trophy icon, the difficulty highlighted in a dedicated box, and a discreet timestamp + pool footer.
+- **Uptime History modal** redesigned: colored left border (red while still offline, green when recovered), status badge ("OFFLINE" / "RECOVERED"), Offline / Back times in clean labelled columns, and the downtime duration in a pill on the right. No more cramped text rows.
+
+## v1.6.2 - Many Fixes & Quality of Life (May 2026)
+- **Label system fully redesigned**: the label popup now has a solid background, a visible color picker (with a checkmark on the selected color), an obvious ✕ delete button on each existing label, and a clear Done button to close. Custom label filter chips in the device header are now clean colored pills.
+- **Custom device icons**: click the icon on any device card to choose from 10 icons (axe, chip, CPU, server, rocket, flame, bolt, diamond, pickaxe, star). Choice is per-device and persistent.
+- **Help guide fully refreshed**: new sections for Live Monitoring (logs + live difficulty) and Blocks & Uptime, updated card and pool manager content, removed obsolete references.
+- **Three offline-device improvements**:
+  - **Pool Manager** now shows offline devices with a red border and disabled checkbox instead of hiding them
+  - Live logs, Live Difficulty, Restart and Settings now show a clear toast notification when targeting an offline device, instead of silently failing
+  - The OFFLINE pill on cards is now managed dynamically (preliminary, fully fixed in v1.6.5)
+- **Fixed**: chart hover positions were off when font scaling was enabled. Hover now uses `getBoundingClientRect` adjusted for the zoom factor, so it works at any font size.
+- **Fixed**: sparkline mini-charts disappeared until next refresh when toggling °C/°F. They now redraw immediately on any card re-render.
+- **Detail sparkline persistence**: per-device hashrate history is now saved to local storage, so the mini-charts are populated immediately after a reload instead of starting empty.
+- **Detail sparkline wider**: the canvas now extends almost to the best-diff column, with a slightly higher resolution for crispness.
+- **Dynamic 1h trend arrow**: the arrow next to "1h avg" now reflects reality - ▲ green when current is above the 1h average, ▼ red when below, ▬ grey when within 2%.
+- **Pool details refresh in real time**: applying a pool through the Pool Manager now triggers a device refresh whether or not "Restart device" is checked, so the new pool details appear without reloading the page.
 
 ## v1.6.1 - Card View Modes (May 2026)
 - **Three card view modes**: A new toggle in the device controls switches between Minimal, Balanced, and Detailed layouts. Your choice is remembered across sessions.
