@@ -1,251 +1,613 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="midnight-orange">
+<html lang="en" data-theme="circuit">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AxeOS Fleet Manager</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="themes.css">
 <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
 
-<header id="topbar">
-  <div class="topbar-left">
-    <div class="logo-mark"><svg viewBox="0 0 32 32" width="20" height="20"><path d="M6 6L26 26M26 6L6 26" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><rect x="12" y="12" width="8" height="8" rx="1.5" transform="rotate(45 16 16)" fill="currentColor"/></svg></div>
-    <div class="logo-text"><span class="logo-title">AxeOS Fleet Manager</span><span class="logo-sub">BitAxe · NerdQAxe</span></div>
+<!-- ═══ Icon sprite ═══ -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <defs>
+    <symbol id="i-fleet" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.8"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.8"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.8"/></symbol>
+    <symbol id="i-pools" viewBox="0 0 24 24"><path d="M12 3 3 7.5l9 4.5 9-4.5L12 3Z"/><path d="m3 12 9 4.5 9-4.5"/><path d="m3 16.5 9 4.5 9-4.5"/></symbol>
+    <symbol id="i-auto" viewBox="0 0 24 24"><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="4"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.6-3 4.4"/><path d="M12 17.5h.01"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8Z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 1-15.4 6.4L3 16"/><path d="M3 12A9 9 0 0 1 18.4 5.6L21 8"/><path d="M21 3v5h-5M3 21v-5h5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-radar" viewBox="0 0 24 24"><path d="M19.1 4.9A10 10 0 1 0 22 12"/><path d="M16.2 7.8A6 6 0 1 0 18 12"/><circle cx="12" cy="12" r="2"/><path d="m13.4 10.6 6-6"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.7V17c0 .6-.5 1-1 1.2C7.9 18.8 7 20.2 7 22M14 14.7V17c0 .6.5 1 1 1.2 1.2.6 2 2 2 3.8"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="2.5"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></symbol>
+    <symbol id="i-restart" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 2.6-6.4L3 8"/><path d="M3 3v5h5"/></symbol>
+    <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M17 3a2.8 2.8 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8Z"/><path d="M7 7h.01"/></symbol>
+    <symbol id="i-shapes" viewBox="0 0 24 24"><circle cx="7" cy="7" r="4"/><rect x="13" y="13" width="8" height="8" rx="1.5"/><path d="m17 3 4 7h-8Z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2Z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-unlock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 7.8-1.2"/></symbol>
+    <symbol id="i-sort-desc" viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6"/></symbol>
+    <symbol id="i-sort-asc" viewBox="0 0 24 24"><path d="M12 20V4M6 10l6-6 6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+    <symbol id="i-thermo" viewBox="0 0 24 24"><path d="M14 14.8V3.5a2.5 2.5 0 0 0-5 0v11.3a4.5 4.5 0 1 0 5 0Z"/></symbol>
+    <symbol id="i-fan" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 10c0-4 1-7 4-7s3 5-2 7M14 12c4 0 7 1 7 4s-5 3-7-2M12 14c0 4-1 7-4 7s-3-5 2-7M10 12c-4 0-7-1-7-4s5-3 7 2"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M12 14 16 9"/><path d="M3.3 17A10 10 0 1 1 20.7 17"/><circle cx="12" cy="14" r="1.5"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-select" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 4h3v16H7zM14 4h3v16h-3z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+    <symbol id="i-live" viewBox="0 0 24 24"><path d="M2 12h4l3-7 4 14 3-7h6"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M2 9a15 15 0 0 1 20 0M12 19.5h.01"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/></symbol>
+    <symbol id="i-logo" viewBox="0 0 32 32"><path d="M6 6 26 26M26 6 6 26" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><rect x="12" y="12" width="8" height="8" rx="1.5" transform="rotate(45 16 16)" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><path d="M3 7l6 6 4-4 8 8"/><path d="M15 17h6v-6"/></symbol>
+    <symbol id="i-switch" viewBox="0 0 24 24"><path d="M4 8h13l-3-3"/><path d="M20 16H7l3 3"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 10v4"/><path d="M12 17.2v.1"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M4 19a2 2 0 0 1 2-2h13"/><path d="M9 7h6"/></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+  <!-- ═══ Navigation rail (bottom bar on narrow screens) ═══ -->
+  <nav class="rail" aria-label="Main">
+    <div class="brand" title="AxeOS Fleet Manager">
+      <span class="brand-mark"><svg class="i" viewBox="0 0 32 32"><use href="#i-logo"/></svg></span>
+    </div>
+    <div class="nav-list">
+      <button class="nav-item" data-nav="fleet" aria-current="page"><svg class="i"><use href="#i-fleet"/></svg><span>Fleet</span></button>
+      <button class="nav-item" data-nav="pools"><svg class="i"><use href="#i-pools"/></svg><span>Pools</span></button>
+      <button class="nav-item" data-nav="automations"><svg class="i"><use href="#i-auto"/></svg><span>Automations</span><span class="nav-dot" id="autoNavDot" hidden></span></button>
+      <button class="nav-item" data-nav="history"><svg class="i"><use href="#i-history"/></svg><span>History</span><span class="nav-badge" id="historyBadge" hidden>0</span></button>
+    </div>
+    <div class="nav-foot">
+      <button class="nav-item nav-util" id="guideBtn"><svg class="i"><use href="#i-help"/></svg><span>Guide</span></button>
+      <button class="nav-item nav-util" id="prefsBtn"><svg class="i"><use href="#i-sliders"/></svg><span>Settings</span></button>
+      <button class="nav-item nav-util nav-support" id="donateBtn"><svg class="i"><use href="#i-heart"/></svg><span>Support</span></button>
+    </div>
+  </nav>
+
+  <div class="main-col">
+    <!-- ═══ Top bar ═══ -->
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1 id="viewTitle">Fleet</h1>
+        <span class="sync" id="syncState"><span class="sync-dot"></span><span id="syncText">Waiting for devices</span></span>
+      </div>
+      <div class="topbar-actions">
+        <label class="search" id="searchBox">
+          <svg class="i"><use href="#i-search"/></svg>
+          <input type="search" id="deviceSearch" placeholder="Find a device" autocomplete="off" spellcheck="false" aria-label="Find a device by name, IP or label">
+          <kbd>/</kbd>
+        </label>
+        <button class="icon-btn" id="blockHistoryBtn" aria-label="Blocks found" title="Blocks found">
+          <svg class="i"><use href="#i-trophy"/></svg><span class="count-badge" id="blockBadge" hidden>0</span>
+        </button>
+        <button class="icon-btn" id="refreshBtn" aria-label="Refresh now" title="Refresh now (R)"><svg class="i"><use href="#i-refresh"/></svg></button>
+        <button class="btn btn-primary" id="scanPopoverBtn" popovertarget="scanPopover"><svg class="i"><use href="#i-plus"/></svg><span>Add devices</span></button>
+      </div>
+    </header>
+
+    <!-- Scan / add popover -->
+    <div id="scanPopover" class="popover scan-pop" popover>
+      <h2 class="pop-title">Find miners on your network</h2>
+      <p class="pop-hint">Your subnet is the first three parts of any miner's IP. If a miner is at 192.168.1.42, the subnet is 192.168.1.</p>
+      <div class="field">
+        <label for="subnetInput">Subnet</label>
+        <div class="input-row">
+          <input type="text" id="subnetInput" placeholder="192.168.1" spellcheck="false" inputmode="decimal">
+          <button id="scanBtn" class="btn btn-primary"><svg class="i"><use href="#i-radar"/></svg><span>Scan</span></button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="manualIpInput">Or add one IP</label>
+        <div class="input-row">
+          <input type="text" id="manualIpInput" placeholder="192.168.1.50" spellcheck="false" inputmode="decimal">
+          <button id="addIpBtn" class="btn">Add</button>
+        </div>
+      </div>
+      <div id="scanStatus" class="status-line" role="status"></div>
+      <div class="scan-progress" id="scanProgress" hidden><span></span></div>
+    </div>
+
+    <main id="main">
+      <!-- ═══════════ FLEET VIEW ═══════════ -->
+      <section class="view" id="view-fleet" data-title="Fleet">
+
+        <section class="pulse card-surface">
+          <div class="pulse-head">
+            <div class="pulse-reading">
+              <span class="pulse-label">Fleet hashrate</span>
+              <div class="pulse-value"><span id="ovCurrentHR">0.00</span><span class="pulse-unit" id="ovCurrentUnit">GH/s</span></div>
+              <div class="pulse-avgs">
+                <span>1h average <strong id="ov1hHR">--</strong></span>
+                <span>24h average <strong id="ov24hHR">--</strong></span>
+              </div>
+            </div>
+            <div class="seg" role="tablist" aria-label="Chart">
+              <button role="tab" class="seg-btn" data-chart="hashrate" aria-selected="true">Hashrate</button>
+              <button role="tab" class="seg-btn" data-chart="diff" aria-selected="false">Share difficulty</button>
+            </div>
+          </div>
+
+          <div class="chart-panel" id="chartPanelHashrate">
+            <div class="chart-wrap"><canvas id="hashrateChart"></canvas><div id="chartTooltip" class="chart-tip" hidden></div></div>
+          </div>
+          <div class="chart-panel" id="chartPanelDiff" hidden>
+            <div class="diff-controls">
+              <select id="diffChartDevice" class="select sm" aria-label="Device"><option value="all">All devices</option></select>
+              <select id="diffRange" class="select sm" aria-label="Time range"><option value="1">Last hour</option><option value="24" selected>Last 24 hours</option><option value="168">Last 7 days</option><option value="0">All time</option></select>
+              <button id="shareMinBtn" class="btn sm" popovertarget="shareMinPop" title="Choose which shares the chart shows"><svg class="i"><use href="#i-sliders"/></svg><span id="shareMinLabel">All records</span></button>
+              <button id="diffLiveBtn" class="btn sm live-btn" aria-pressed="false"><span class="live-led"></span><span id="diffLiveLabel">Stream live shares</span></button>
+              <span id="diffLiveNote" class="muted small">Pick one device to stream every share as it lands.</span>
+            </div>
+            <div class="chart-wrap"><canvas id="diffChart"></canvas><div id="diffChartTooltip" class="chart-tip" hidden></div></div>
+            <div class="chart-legend" id="diffLegend"></div>
+            <div id="shareMinPop" class="popover share-pop" popover>
+              <h2 class="pop-title">Which shares to show</h2>
+              <div class="field">
+                <label for="shareMinInput">Minimum difficulty</label>
+                <div class="input-row"><input type="text" id="shareMinInput" placeholder="e.g. 1M, 500K, 2.5G" spellcheck="false" autocomplete="off"><button class="btn btn-primary" id="shareMinApply">Apply</button></div>
+                <div class="share-presets" role="group" aria-label="Quick picks"><button class="chip" data-smin="0">None</button><button class="chip" data-smin="100000">100K</button><button class="chip" data-smin="1000000">1M</button><button class="chip" data-smin="10000000">10M</button><button class="chip" data-smin="100000000">100M</button></div>
+                <span class="hint">K = thousand, M = million, G = billion. Shares under the minimum are hidden.</span>
+              </div>
+              <label class="check-row"><input type="checkbox" id="shareCollect"><span><strong>Record every share above the minimum</strong>, not only new session bests</span></label>
+              <p class="pop-hint">The miners don't keep a list of their shares, so this reads each miner's log as it happens: their pages open in a minimized browser window, the same way the live log works. It runs while this dashboard is open.</p>
+              <div class="status-line" id="shareMinEst" role="status"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="stats" aria-label="Fleet statistics">
+          <div class="stat"><span class="stat-lbl">Online</span><span class="stat-val" id="ovDevices">0/0</span><span class="stat-sub" id="ovUptime">avg uptime --</span></div>
+          <div class="stat"><span class="stat-lbl">Power</span><span class="stat-val" id="ovPower">0 W</span><span class="stat-sub" id="ovEff">-- J/TH</span></div>
+          <button class="stat stat-btn" id="ovCostStat" title="Set your electricity price in Settings"><span class="stat-lbl">Energy cost</span><span class="stat-val" id="ovCost">--</span><span class="stat-sub" id="ovKwh">-- kWh/day</span></button>
+          <div class="stat"><span class="stat-lbl">Average temp</span><span class="stat-val" id="ovAvgTemp">--</span><span class="stat-sub" id="ovMaxTemp">hottest --</span></div>
+          <div class="stat"><span class="stat-lbl">Shares</span><span class="stat-val" id="ovShares">0</span><span class="stat-sub" id="ovRejected">0 rejected</span></div>
+          <div class="stat stat-best"><span class="stat-lbl">Best difficulty</span><span class="stat-val" id="ovBestDiff">--</span><span class="stat-sub" id="ovBestSession">session best --</span></div>
+        </section>
+
+        <section id="uptimeMonitor" class="health card-surface" hidden aria-label="Fleet health"></section>
+
+        <section class="devices" aria-labelledby="devicesTitle">
+          <div class="dev-toolbar">
+            <h2 id="devicesTitle" class="section-title">Devices <span class="muted" id="devicesCount"></span></h2>
+            <div class="dev-filters" id="typeFilters" role="group" aria-label="Filter by type">
+              <button class="chip" data-filter="all" aria-pressed="true">All</button>
+              <button class="chip" data-filter="bitaxe" aria-pressed="false"><span class="chip-dot t-bitaxe"></span>BitAxe</button>
+              <button class="chip" data-filter="nerdqaxe" aria-pressed="false"><span class="chip-dot t-nerd"></span>NerdQAxe</button>
+              <button class="chip" data-filter="offline" aria-pressed="false"><span class="chip-dot t-off"></span>Offline</button>
+            </div>
+            <div class="dev-filters" id="labelFilters" role="group" aria-label="Filter by label"></div>
+            <div class="toolbar-spacer"></div>
+            <div class="tool-group">
+              <button id="sortLockBtn" class="icon-btn sm" aria-pressed="false" title="Lock the custom order"><svg class="i"><use href="#i-unlock"/></svg></button>
+              <select id="sortSelect" class="select sm" aria-label="Sort devices">
+                <option value="custom">Custom order</option>
+                <option value="hashrate">Hashrate</option>
+                <option value="bestdiff">Best difficulty</option>
+                <option value="temp">Temperature</option>
+                <option value="efficiency">Efficiency</option>
+                <option value="uptime">Uptime</option>
+                <option value="name">Name</option>
+                <option value="ip">IP address</option>
+              </select>
+              <button id="sortDirBtn" class="icon-btn sm" title="Sort direction" aria-label="Sort direction"><svg class="i"><use href="#i-sort-desc"/></svg></button>
+            </div>
+            <div class="seg sm" id="viewModeControl" role="group" aria-label="Card density">
+              <button class="seg-btn" data-view="minimal" aria-pressed="false" title="Compact rows">Compact</button>
+              <button class="seg-btn" data-view="balanced" aria-pressed="true" title="Standard cards">Standard</button>
+              <button class="seg-btn" data-view="detailed" aria-pressed="false" title="Cards with sparkline and extra stats">Detailed</button>
+            </div>
+            <button class="icon-btn sm" id="selectModeBtn" aria-pressed="false" title="Select several devices"><svg class="i"><use href="#i-select"/></svg></button>
+            <button class="icon-btn sm" id="deviceIoBtn" popovertarget="deviceIoMenu" title="Import or export devices"><svg class="i"><use href="#i-more"/></svg></button>
+            <div id="deviceIoMenu" class="popover menu" popover>
+              <button class="menu-item" id="exportDevicesBtn"><svg class="i"><use href="#i-download"/></svg>Export device list</button>
+              <button class="menu-item" id="importDevicesBtn"><svg class="i"><use href="#i-upload"/></svg>Import device list</button>
+            </div>
+            <input type="file" id="importDevicesFile" accept="application/json,.json" hidden>
+          </div>
+          <div id="deviceGrid" class="device-grid view-balanced"></div>
+        </section>
+
+        <div class="bulk-bar" id="bulkBar" hidden>
+          <span id="bulkCount">0 selected</span>
+          <button class="btn sm" id="bulkAllBtn">Select all</button>
+          <span class="toolbar-spacer"></span>
+          <button class="btn sm" id="bulkPoolBtn"><svg class="i"><use href="#i-pools"/></svg>Apply pool</button>
+          <button class="btn sm" id="bulkRestartBtn"><svg class="i"><use href="#i-restart"/></svg>Restart</button>
+          <button class="btn sm btn-danger-ghost" id="bulkRemoveBtn"><svg class="i"><use href="#i-trash"/></svg>Remove</button>
+          <button class="icon-btn sm" id="bulkCloseBtn" aria-label="Exit selection"><svg class="i"><use href="#i-x"/></svg></button>
+        </div>
+
+        <footer class="foot">AxeOS Fleet Manager <span id="appVersion"></span>. Open source, runs entirely on your network.</footer>
+      </section>
+
+      <!-- ═══════════ POOLS VIEW ═══════════ -->
+      <section class="view" id="view-pools" data-title="Pools" hidden>
+        <div class="two-col">
+          <section class="card-surface panel">
+            <div class="panel-head">
+              <div>
+                <h2 class="section-title">Saved pools</h2>
+                <p class="muted small">Pool profiles you can push to any device. Worker names are added for you.</p>
+              </div>
+              <div class="panel-actions">
+                <button id="importPoolsBtn" class="icon-btn sm" title="Import pools"><svg class="i"><use href="#i-upload"/></svg></button>
+                <button id="exportPoolsBtn" class="icon-btn sm" title="Export pools"><svg class="i"><use href="#i-download"/></svg></button>
+                <button id="catalogBtn" class="btn sm"><svg class="i"><use href="#i-book"/></svg>Pool directory</button>
+                <button id="addPoolBtn" class="btn btn-primary sm"><svg class="i"><use href="#i-plus"/></svg>New pool</button>
+              </div>
+            </div>
+            <input type="file" id="importPoolsFile" accept="application/json,.json" hidden>
+            <div class="dev-filters" id="coinTabs"></div>
+            <div id="savedPoolsList" class="pool-list"></div>
+          </section>
+
+          <section class="card-surface panel" id="applyPanel">
+            <div class="panel-head">
+              <div>
+                <h2 class="section-title">Apply to devices</h2>
+                <p class="muted small">The device name becomes the worker suffix, e.g. wallet.kitchen-axe.</p>
+              </div>
+            </div>
+            <div class="form-grid">
+              <div class="field"><label for="applyCoinSelect">Coin</label><select id="applyCoinSelect" class="select"><option value="">Choose a coin</option></select></div>
+              <div class="field"><label for="applyPoolSelect">Primary pool</label><select id="applyPoolSelect" class="select"><option value="">Choose a pool</option></select></div>
+              <div class="field"><label for="applyFbCoinSelect">Fallback coin <span class="muted">can differ</span></label><select id="applyFbCoinSelect" class="select"><option value="">Any coin</option></select></div>
+              <div class="field"><label for="applyFallbackSelect">Fallback pool <span class="muted">optional</span></label><select id="applyFallbackSelect" class="select"><option value="">None</option></select></div>
+            </div>
+            <div class="field">
+              <div class="field-head"><label>Devices</label><button class="link-btn" id="applySelectAll">Select all online</button></div>
+              <div id="applyDeviceList" class="check-grid"></div>
+            </div>
+            <label class="check-row"><input type="checkbox" id="applyRestart" checked><span>Restart each device after applying</span></label>
+            <div class="apply-foot">
+              <button id="applyPoolBtn" class="btn btn-primary" disabled>Apply pool</button>
+              <div id="applyStatus" class="status-line" role="status"></div>
+            </div>
+            <div id="applyProgress" class="progress" hidden><div id="applyProgressBar"></div></div>
+          </section>
+        </div>
+      </section>
+
+      <!-- ═══════════ AUTOMATIONS VIEW ═══════════ -->
+      <section class="view" id="view-automations" data-title="Automations" hidden>
+        <div class="auto-summary" id="autoSummary"></div>
+        <div class="auto-groups" id="autoPanel"></div>
+        <section class="card-surface auto-recent">
+          <div class="panel-head"><h2 class="section-title">Recent automation actions</h2><button class="link-btn" id="autoRecentAll">Full history</button></div>
+          <div id="autoRecent" class="log-list compact"></div>
+        </section>
+      </section>
+
+      <!-- ═══════════ HISTORY VIEW ═══════════ -->
+      <section class="view" id="view-history" data-title="History" hidden>
+        <div class="history-head">
+          <div class="seg" role="tablist" aria-label="History type" id="historyTabs">
+            <button role="tab" class="seg-btn" data-htab="activity" aria-selected="true">Activity</button>
+            <button role="tab" class="seg-btn" data-htab="downtime" aria-selected="false">Downtime</button>
+            <button role="tab" class="seg-btn" data-htab="blocks" aria-selected="false">Blocks found <span class="count-badge inline" id="blockBadgeTab" hidden>0</span></button>
+          </div>
+          <div class="history-actions" id="activityActions">
+            <div class="dev-filters" id="logLevelFilters">
+              <button class="chip" data-level="all" aria-pressed="true">All</button>
+              <button class="chip" data-level="action" aria-pressed="false">Actions</button>
+              <button class="chip" data-level="warn" aria-pressed="false">Warnings</button>
+              <button class="chip" data-level="error" aria-pressed="false">Errors</button>
+            </div>
+            <button id="clearLogsBtn" class="btn sm">Clear log</button>
+          </div>
+        </div>
+        <div class="card-surface history-panel" data-hpanel="activity"><div id="logContainer" class="log-list"></div></div>
+        <div class="card-surface history-panel" data-hpanel="downtime" hidden><div id="uptimeHistoryList" class="event-list"></div></div>
+        <div class="card-surface history-panel" data-hpanel="blocks" hidden><div id="blockHistoryList" class="event-list"></div></div>
+      </section>
+    </main>
   </div>
-  <div class="topbar-right">
-    <!-- Scan popover trigger -->
-    <div class="scan-popover-wrap">
-      <button id="scanPopoverBtn" class="btn-icon topbar-scan-btn" title="Scan / Add Devices"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
-      <div id="scanPopover" class="scan-popover">
-        <div class="scan-pop-row">
-          <label>Subnet</label>
-          <input type="text" id="subnetInput" placeholder="192.168.1" spellcheck="false">
-          <button id="scanBtn" class="btn-primary btn-sm"><span class="scan-icon">⟳</span> Scan</button>
-          <button id="refreshBtn" class="btn-secondary btn-sm">↻</button>
-        </div>
-        <div class="scan-pop-row">
-          <label>Add IP</label>
-          <input type="text" id="manualIpInput" placeholder="192.168.1.50" spellcheck="false">
-          <button id="addIpBtn" class="btn-secondary btn-sm">+ Add</button>
-        </div>
-        <div id="scanStatus" class="scan-status"></div>
-      </div>
-    </div>
-    <button id="tempUnitBtn" class="btn-icon topbar-util-btn" title="Toggle °C / °F">°C</button>
-    <button id="fontScaleBtn" class="btn-icon topbar-util-btn" title="Toggle font size">Aa+</button>
-    <select id="themeSelect" class="theme-select" title="Change theme"></select>
-    <div class="live-dot"></div>
-    <span id="deviceCountBadge">0 devices</span>
-    <button id="donateBtn" class="btn-icon donate-btn donate-visible" title="Support Development"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="donate-label">Donate</span></button>
-  </div>
-</header>
-
-<!-- Pool panel trigger -->
-<button id="poolPanelBtn" class="panel-trigger-left" title="Pool Manager">
-  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>
-  <span>Pools</span>
-</button>
-
-<!-- Pool slide panel -->
-<div id="poolPanelOverlay" class="panel-overlay"></div>
-<aside id="poolPanel" class="slide-panel-left">
-  <div class="panel-header"><h2>Pool Manager</h2><button id="poolPanelClose" class="panel-close">✕</button></div>
-  <div class="panel-body">
-    <div class="panel-section">
-      <div class="section-header"><h3>Saved Pools</h3><button id="addPoolBtn" class="btn-primary btn-sm">+ Add</button></div>
-      <div class="coin-tabs" id="coinTabs"></div>
-      <div id="savedPoolsList" class="saved-pools-list"><div class="empty-state small"><p>No pools saved yet.</p></div></div>
-    </div>
-    <div class="panel-divider"></div>
-    <div class="panel-section">
-      <h3>Apply to Devices</h3>
-      <div class="apply-pool-form">
-        <div class="form-row"><label>Coin</label><select id="applyCoinSelect"><option value="">-- Select coin --</option></select></div>
-        <div class="form-row"><label>Primary Pool</label><select id="applyPoolSelect"><option value="">-- Select pool --</option></select></div>
-        <div class="form-row"><label>Fallback Coin <span class="form-hint-inline">(can differ from primary)</span></label><select id="applyFbCoinSelect"><option value="">-- Same as primary --</option></select></div>
-        <div class="form-row"><label>Fallback Pool <span class="form-hint-inline">(optional)</span></label><select id="applyFallbackSelect"><option value="">-- None --</option></select></div>
-        <div class="form-row"><label>Devices</label><div id="applyDeviceList" class="checkbox-list"><p class="muted">No devices</p></div></div>
-        <div class="form-row inline-check"><label><input type="checkbox" id="applyRestart" checked> Restart after applying</label></div>
-        <button id="applyPoolBtn" class="btn-primary" disabled>Apply to Devices</button>
-        <div id="applyProgress" class="apply-progress"><div id="applyProgressBar" class="apply-progress-bar"></div></div>
-        <div id="applyStatus" class="status-msg"></div>
-      </div>
-    </div>
-  </div>
-</aside>
-
-<!-- Dashboard -->
-<main id="dashboard">
-  <section class="chart-section anim-fade-in" style="animation-delay:.05s">
-    <div class="chart-card">
-      <div class="chart-header">
-        <span class="chart-title">Fleet Hashrate</span>
-        <div class="chart-live-stats">
-          <div class="cls"><span class="cls-val" id="ovCurrentHR2">--</span><span class="cls-lbl">Current</span></div>
-          <div class="cls"><span class="cls-val" id="ov1hHR2">--</span><span class="cls-lbl">1h Avg</span></div>
-          <div class="cls"><span class="cls-val" id="ov24hHR2">--</span><span class="cls-lbl">24h Avg</span></div>
-        </div>
-      </div>
-      <div class="chart-wrap"><canvas id="hashrateChart"></canvas><div id="chartTooltip" class="chart-tooltip"></div></div>
-    </div>
-  </section>
-
-  <section class="overview-row anim-fade-in" style="animation-delay:.1s">
-    <div class="ov-mini"><span class="ov-mini-val" id="ovDevices">0</span><span class="ov-mini-lbl">Devices</span></div>
-    <div class="ov-mini"><span class="ov-mini-val" id="ovShares">0</span><span class="ov-mini-lbl">Accepted</span></div>
-    <div class="ov-mini"><span class="ov-mini-val" id="ovRejected">0</span><span class="ov-mini-lbl">Rejected</span></div>
-    <div class="ov-mini"><span class="ov-mini-val" id="ovPower">0W</span><span class="ov-mini-lbl">Power</span></div>
-    <div class="ov-mini"><span class="ov-mini-val" id="ovAvgTemp">--°</span><span class="ov-mini-lbl">Avg Temp</span></div>
-    <div class="ov-mini"><span class="ov-mini-val" id="ovUptime">--</span><span class="ov-mini-lbl">Uptime</span></div>
-    <div class="ov-mini ov-accent"><span class="ov-mini-val" id="ovBestDiff">--</span><span class="ov-mini-lbl">Best Diff</span></div>
-    <div class="ov-mini"><span class="ov-mini-val" id="ovBestSession">--</span><span class="ov-mini-lbl">Session Best</span></div>
-  </section>
-
-  <section class="devices-section">
-    <div class="section-header anim-fade-in" style="animation-delay:.15s">
-      <h2>Devices</h2>
-      <div class="device-controls">
-        <div class="sort-controls">
-          <button id="sortLockBtn" class="btn-icon sort-lock-btn" title="Lock custom order"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></button>
-          <select id="sortSelect" class="sort-select" title="Sort devices">
-            <option value="custom">✋ Custom</option>
-            <option value="hashrate">⚡ Hashrate</option>
-            <option value="bestdiff">💎 Best Diff</option>
-            <option value="uptime">⏱ Uptime</option>
-            <option value="ip">🌐 IP</option>
-            <option value="name">📛 Name</option>
-            <option value="temp">🌡 Temp</option>
-          </select>
-          <button id="sortDirBtn" class="btn-icon sort-dir-btn" title="Toggle direction">↓</button>
-        </div>
-        <div class="device-filters">
-          <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="bitaxe">BitAxe</button>
-          <button class="filter-btn" data-filter="nerdqaxe">NerdQAxe</button>
-        </div>
-        <div class="device-filters label-filters" id="labelFilters"></div>
-      </div>
-    </div>
-    <div id="deviceGrid" class="device-grid">
-      <div class="empty-state"><div class="empty-icon">⛏</div><h3>No devices found</h3><p>Click the 🔍 icon in the top bar to scan your network.</p></div>
-    </div>
-  </section>
-
-  <footer class="dashboard-footer">AxeOS Fleet Manager v1.0 — Open source BitAxe & NerdQAxe management</footer>
-</main>
-
-<!-- Floating log -->
-<button id="logFab" class="log-fab" title="Activity Log">
-  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-  <span id="logBadge" class="log-badge-count" style="display:none">0</span>
-</button>
-<div id="logWidget" class="log-widget">
-  <div class="log-widget-header"><span>Activity Log</span><div class="log-widget-actions"><button id="clearLogsBtn" class="btn-sm btn-secondary">Clear</button><button id="logWidgetClose" class="panel-close-sm">✕</button></div></div>
-  <div id="logContainer" class="log-container"><div class="log-empty">No activity yet.</div></div>
 </div>
 
-<!-- Pool Modal -->
-<div id="poolModal" class="modal hidden">
-  <div class="modal-overlay"></div>
-  <div class="modal-content">
-    <div class="modal-header"><h3 id="poolModalTitle">Add Pool</h3><button class="modal-close" data-close="poolModal">✕</button></div>
-    <div class="modal-body">
-      <div class="form-row"><label>Coin</label><select id="poolCoin"></select></div>
-      <div class="form-row"><label>Pool Name</label><input type="text" id="poolName" placeholder="e.g. Ocean Bitcoin Pool"></div>
-      <div class="form-row"><label>Stratum URL <span class="form-hint-inline">(host only, no stratum+tcp://)</span></label><input type="text" id="poolURL" placeholder="e.g. mine.ocean.xyz"></div>
-      <div class="form-row"><label>Port</label><input type="number" id="poolPort" placeholder="e.g. 3333"></div>
-      <div class="form-row"><label>Worker / Wallet</label><input type="text" id="poolUser" placeholder="e.g. bc1q...wallet"></div>
-      <div class="form-row"><label>Password</label><input type="text" id="poolPassword" placeholder="e.g. x"></div>
-      <div class="form-row inline-check"><label><input type="checkbox" id="poolTLS"> Use TLS</label></div>
+<!-- ═══════════ DIALOGS ═══════════ -->
+
+<!-- Pool editor -->
+<dialog id="poolModal" class="dialog" closedby="any" aria-labelledby="poolModalTitle">
+  <form method="dialog" class="dlg">
+    <header class="dlg-head"><h2 id="poolModalTitle">New pool</h2><button type="button" class="icon-btn sm" data-close="poolModal" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></header>
+    <div class="dlg-body form-grid">
+      <div class="field"><label for="poolCoin">Coin</label><select id="poolCoin" class="select"></select></div>
+      <div class="field"><label for="poolName">Name</label><input type="text" id="poolName" placeholder="Ocean solo"></div>
+      <div class="field span-2"><label id="poolTypeLabel">Type <span class="muted">optional</span></label>
+        <div class="pool-type-row">
+          <div class="seg sm" id="poolTypeSeg" role="radiogroup" aria-labelledby="poolTypeLabel">
+            <button type="button" class="seg-btn" role="radio" data-ptype="" aria-pressed="true">Not set</button>
+            <button type="button" class="seg-btn" role="radio" data-ptype="solo" aria-pressed="false">Solo</button>
+            <button type="button" class="seg-btn" role="radio" data-ptype="pool" aria-pressed="false">Pooled</button>
+          </div>
+          <span class="hint" id="poolTypeHint"></span>
+        </div>
+      </div>
+      <div class="field span-2"><label for="poolURL">Stratum address <span class="muted">paste the full URL, the port is picked up for you</span></label><input type="text" id="poolURL" placeholder="stratum+tcp://mine.ocean.xyz:3334" spellcheck="false"></div>
+      <div class="field"><label for="poolPort">Port</label><input type="number" id="poolPort" placeholder="3333"></div>
+      <div class="field"><label for="poolPassword">Password</label><input type="text" id="poolPassword" placeholder="x"></div>
+      <div class="field span-2"><label for="poolUser">Wallet or username</label><input type="text" id="poolUser" placeholder="bc1q…" spellcheck="false"></div>
+      <label class="check-row span-2"><input type="checkbox" id="poolTLS"><span>Use TLS</span></label>
+      <div id="poolFormError" class="status-line error span-2" role="alert"></div>
     </div>
-    <div class="modal-footer"><button class="btn-secondary" data-close="poolModal">Cancel</button><button class="btn-primary" id="poolModalSave">Save</button></div>
+    <footer class="dlg-foot"><button type="button" class="btn" data-close="poolModal">Cancel</button><button type="button" class="btn btn-primary" id="poolModalSave">Save pool</button></footer>
+  </form>
+</dialog>
+
+<!-- Device settings -->
+<dialog id="settingsModal" class="dialog wide" closedby="any" aria-labelledby="settingsModalTitle">
+  <div class="dlg" id="settingsModalBody">
+    <header class="dlg-head">
+      <div><h2 id="settingsModalTitle">Device</h2><span class="muted small" id="settingsModalSub"></span></div>
+      <button type="button" class="icon-btn sm" data-close="settingsModal" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="seg tabs" role="tablist">
+      <button role="tab" class="seg-btn mtab" data-mtab="s-general" aria-selected="true">Overview</button>
+      <button role="tab" class="seg-btn mtab" data-mtab="s-fan" aria-selected="false">Fan</button>
+      <button role="tab" class="seg-btn mtab" data-mtab="s-mining" aria-selected="false">Frequency &amp; voltage</button>
+      <button role="tab" class="seg-btn mtab" data-mtab="s-pool" aria-selected="false">Pool</button>
+    </div>
+    <div class="dlg-body">
+      <div class="mtab-content" id="s-general"><div class="info-grid" id="sInfoGrid"></div></div>
+      <div class="mtab-content" id="s-fan" hidden>
+        <label class="check-row" id="sAutoFanRow"><input type="checkbox" id="sAutoFan"><span>Let the firmware control the fan</span></label>
+        <p id="sNerdFanNote" class="note" hidden>NerdQAxe firmware no longer supports automatic fan control, so set a manual speed.</p>
+        <div class="field" id="sManualFanRow"><label for="sFanSlider">Fan speed</label><div class="range-row"><input type="range" id="sFanSlider" min="0" max="100" value="100"><output id="sFanVal">100%</output></div></div>
+        <div class="apply-foot"><button class="btn btn-primary sm" id="sFanSave">Apply fan setting</button><div id="sFanStatus" class="status-line" role="status"></div></div>
+      </div>
+      <div class="mtab-content" id="s-mining" hidden>
+        <p class="note warn-note">Higher frequency and voltage mean more heat. Change one step at a time and watch the temperature.</p>
+        <div class="form-grid">
+          <div class="field"><label for="sFrequency">Frequency (MHz)</label><input type="number" id="sFrequency" step="25" min="100" max="1200"><span class="hint" id="sFreqHint"></span></div>
+          <div class="field"><label for="sVoltage">Core voltage (mV)</label><input type="number" id="sVoltage" step="10" min="700" max="1400"><span class="hint" id="sVoltHint"></span></div>
+        </div>
+        <div class="apply-foot"><button class="btn btn-primary sm" id="sMiningSave">Apply</button><div id="sMiningStatus" class="status-line" role="status"></div></div>
+      </div>
+      <div class="mtab-content" id="s-pool" hidden>
+        <h3 class="sub-title">Primary pool</h3>
+        <div class="form-grid">
+          <div class="field span-2"><label for="sPoolURL">Stratum address</label><input type="text" id="sPoolURL" spellcheck="false"></div>
+          <div class="field"><label for="sPoolPort">Port</label><input type="number" id="sPoolPort"></div>
+          <div class="field"><label for="sPoolPass">Password</label><input type="text" id="sPoolPass" placeholder="x"></div>
+          <div class="field span-2"><label for="sPoolUser">Worker</label><input type="text" id="sPoolUser" spellcheck="false"></div>
+        </div>
+        <h3 class="sub-title">Fallback pool</h3>
+        <div class="form-grid">
+          <div class="field span-2"><label for="sFbPoolURL">Stratum address</label><input type="text" id="sFbPoolURL" spellcheck="false"></div>
+          <div class="field"><label for="sFbPoolPort">Port</label><input type="number" id="sFbPoolPort"></div>
+          <div class="field"><label for="sFbPoolPass">Password</label><input type="text" id="sFbPoolPass" placeholder="x"></div>
+          <div class="field span-2"><label for="sFbPoolUser">Worker</label><input type="text" id="sFbPoolUser" spellcheck="false"></div>
+        </div>
+        <div class="apply-foot"><button class="btn btn-primary sm" id="sPoolSave">Apply pool and restart</button><div id="sPoolStatus" class="status-line" role="status"></div></div>
+      </div>
+    </div>
+    <footer class="dlg-foot split">
+      <div class="btn-row">
+        <button class="btn sm" id="sIdentifyBtn"><svg class="i"><use href="#i-bulb"/></svg>Identify</button>
+        <button class="btn sm" id="sOpenBtn"><svg class="i"><use href="#i-external"/></svg>Web UI</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn sm btn-danger-ghost" id="sRemoveBtn"><svg class="i"><use href="#i-trash"/></svg>Remove</button>
+        <button class="btn sm btn-danger" id="sRestartBtn"><svg class="i"><use href="#i-restart"/></svg>Restart</button>
+      </div>
+    </footer>
   </div>
-</div>
+</dialog>
 
-<!-- Settings Modal -->
-<div id="settingsModal" class="modal hidden">
-  <div class="modal-overlay"></div>
-  <div class="modal-content modal-wide">
-    <div class="modal-header"><h3 id="settingsModalTitle">Device Settings</h3><button class="modal-close" data-close="settingsModal">✕</button></div>
-    <div class="modal-body" id="settingsModalBody">
-      <div class="modal-tabs">
-        <button class="mtab active" data-mtab="s-general">General</button>
-        <button class="mtab" data-mtab="s-fan">Fan</button>
-        <button class="mtab" data-mtab="s-mining">Mining</button>
-        <button class="mtab" data-mtab="s-pool">Pool</button>
-      </div>
-      <div class="mtab-content active" id="s-general"><div class="settings-info-grid" id="sInfoGrid"></div></div>
-      <div class="mtab-content" id="s-fan">
-        <div class="form-row inline-check" id="sAutoFanRow"><label><input type="checkbox" id="sAutoFan"> Automatic fan control</label></div>
-        <div id="sNerdFanNote" class="form-hint" style="display:none;color:var(--accent);margin-bottom:8px">Auto fan is not available on NerdQAxe firmware. Use manual speed control below.</div>
-        <div class="form-row" id="sManualFanRow"><label>Manual Speed (%)</label><div class="range-row"><input type="range" id="sFanSlider" min="0" max="100" value="100"><span class="range-val" id="sFanVal">100%</span></div></div>
-        <button class="btn-primary btn-sm" id="sFanSave">Apply Fan Settings</button><div id="sFanStatus" class="status-msg"></div>
-      </div>
-      <div class="mtab-content" id="s-mining">
-        <div class="form-row"><label>Frequency (MHz)</label><input type="number" id="sFrequency" step="25" min="100" max="800"><span class="form-hint" id="sFreqHint"></span></div>
-        <div class="form-row"><label>Voltage (mV)</label><input type="number" id="sVoltage" step="10" min="700" max="1400"><span class="form-hint" id="sVoltHint"></span></div>
-        <button class="btn-primary btn-sm" id="sMiningSave">Apply Mining Settings</button><div id="sMiningStatus" class="status-msg"></div>
-      </div>
-      <div class="mtab-content" id="s-pool">
-        <h4 class="form-section-title">Primary Pool</h4>
-        <div class="form-row"><label>Stratum URL</label><input type="text" id="sPoolURL"></div>
-        <div class="form-row"><label>Port</label><input type="number" id="sPoolPort"></div>
-        <div class="form-row"><label>Worker</label><input type="text" id="sPoolUser"></div>
-        <div class="form-row"><label>Password</label><input type="text" id="sPoolPass" placeholder="x"></div>
-        <h4 class="form-section-title">Fallback Pool</h4>
-        <div class="form-row"><label>Stratum URL</label><input type="text" id="sFbPoolURL"></div>
-        <div class="form-row"><label>Port</label><input type="number" id="sFbPoolPort"></div>
-        <div class="form-row"><label>Worker</label><input type="text" id="sFbPoolUser"></div>
-        <div class="form-row"><label>Password</label><input type="text" id="sFbPoolPass" placeholder="x"></div>
-        <button class="btn-primary btn-sm" id="sPoolSave">Apply Pool & Restart</button><div id="sPoolStatus" class="status-msg"></div>
+<!-- Live logs -->
+<dialog id="liveLogModal" class="dialog wide tall" aria-labelledby="llTitle">
+  <div class="dlg">
+    <header class="dlg-head">
+      <div><h2 id="llTitle">Live log <span class="muted" id="llDevice"></span></h2></div>
+      <button type="button" class="icon-btn sm" id="llClose" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button>
+    </header>
+    <div class="ll-toolbar">
+      <span id="llStatus" class="ll-status ll-connecting">Connecting</span>
+      <input type="search" id="llFilter" class="sm-input" placeholder="Filter lines" aria-label="Filter log lines">
+      <div class="btn-row">
+        <button class="btn sm" id="llPauseBtn"><svg class="i"><use href="#i-pause"/></svg><span>Pause</span></button>
+        <button class="btn sm" id="llSaveBtn"><svg class="i"><use href="#i-download"/></svg>Save</button>
+        <button class="btn sm" id="llClearBtn">Clear</button>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" id="sIdentifyBtn">💡 Identify</button>
-      <button class="btn-danger" id="sRestartBtn">⟳ Restart</button>
-      <button class="btn-secondary" id="sRemoveBtn">🗑 Remove</button>
-      <button class="btn-secondary" data-close="settingsModal">Close</button>
+    <div id="llConsole" class="ll-console" tabindex="0"></div>
+  </div>
+</dialog>
+
+<!-- App preferences -->
+<dialog id="prefsModal" class="dialog wide" closedby="any" aria-labelledby="prefsTitle">
+  <div class="dlg">
+    <header class="dlg-head"><h2 id="prefsTitle">Settings</h2><button type="button" class="icon-btn sm" data-close="prefsModal" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></header>
+    <div class="dlg-body prefs">
+      <section class="pref-sec">
+        <h3 class="sub-title">Appearance</h3>
+        <div class="theme-picker" id="themePicker" role="radiogroup" aria-label="Theme"></div>
+        <div class="pref-row"><div><strong>Text size</strong><p class="muted small">Scales the whole dashboard.</p></div>
+          <div class="seg sm" id="textScaleSeg"><button class="seg-btn" data-scale="1">Normal</button><button class="seg-btn" data-scale="1.12">Large</button><button class="seg-btn" data-scale="1.25">Larger</button></div></div>
+        <div class="pref-row"><div><strong>Temperature</strong></div>
+          <div class="seg sm" id="tempUnitSeg"><button class="seg-btn" data-unit="C">°C</button><button class="seg-btn" data-unit="F">°F</button></div></div>
+      </section>
+      <section class="pref-sec">
+        <h3 class="sub-title">Monitoring</h3>
+        <div class="pref-row"><div><strong>Refresh every</strong><p class="muted small">How often every device is polled. Automations check at the same pace.</p></div>
+          <select id="prefPoll" class="select sm"><option value="5">5 seconds</option><option value="7">7 seconds</option><option value="10">10 seconds</option><option value="15">15 seconds</option><option value="30">30 seconds</option><option value="60">1 minute</option></select></div>
+        <div class="pref-row"><div><strong>Electricity price</strong><p class="muted small">Used for the daily energy cost estimate.</p></div>
+          <div class="input-row tight"><input type="number" id="prefPrice" min="0" step="0.01" placeholder="0.30" class="sm-input num"><select id="prefCurrency" class="select sm"><option>USD</option><option>EUR</option><option>GBP</option><option>CHF</option><option>CAD</option><option>AUD</option><option>JPY</option><option>BRL</option><option>SEK</option><option>PLN</option></select><span class="muted small">per kWh</span></div></div>
+      </section>
+      <section class="pref-sec">
+        <h3 class="sub-title">Desktop alerts</h3>
+        <p class="muted small">Shown by the system when this tab is in the background.</p>
+        <label class="check-row"><input type="checkbox" id="prefNotifyOffline"><span>A device goes offline or comes back</span></label>
+        <label class="check-row"><input type="checkbox" id="prefNotifyBlock"><span>A block is found</span></label>
+        <label class="check-row"><input type="checkbox" id="prefNotifyAuto"><span>An automation restarts a device</span></label>
+        <label class="check-row"><input type="checkbox" id="prefBadge"><span>Show online count on the toolbar icon</span></label>
+      </section>
+      <section class="pref-sec">
+        <h3 class="sub-title">Data</h3>
+        <div class="pref-row"><div><strong>Full backup</strong><p class="muted small">Devices, names, labels, pools, automations and settings in one file.</p></div>
+          <div class="btn-row"><button class="btn sm" id="backupExportBtn"><svg class="i"><use href="#i-download"/></svg>Export</button><button class="btn sm" id="backupImportBtn"><svg class="i"><use href="#i-upload"/></svg>Restore</button></div></div>
+        <input type="file" id="backupImportFile" accept="application/json,.json" hidden>
+        <div class="pref-row"><div><strong>Chart history</strong><p class="muted small">Clears the hashrate and difficulty graphs and card sparklines.</p></div>
+          <button class="btn sm btn-danger-ghost" id="clearChartsBtn">Clear charts</button></div>
+        <div class="pref-row"><div><strong>Setup wizard</strong><p class="muted small">Walk through the first-run tour again.</p></div>
+          <button class="btn sm" id="rerunTutorialBtn">Show tour</button></div>
+      </section>
     </div>
   </div>
-</div>
+</dialog>
 
-
-<!-- Donate Modal -->
-<div id="donateModal" class="modal hidden">
-  <div class="modal-overlay"></div>
-  <div class="modal-content donate-modal">
-    <div class="modal-header"><h3>Support Development</h3><button class="modal-close" data-close="donateModal">✕</button></div>
-    <div class="modal-body donate-body">
-      <p class="donate-thanks">Thank you for using AxeOS Fleet Manager! If you find it useful, consider supporting development with a small donation.</p>
-      <div class="donate-addr"><span class="donate-coin">BTC</span><code class="donate-val">bc1qdj2fd8lu4h7fvttsx7h0sqt0hlzkhdqyr4nfhc</code><button class="donate-copy" data-addr="bc1qdj2fd8lu4h7fvttsx7h0sqt0hlzkhdqyr4nfhc" title="Copy">📋</button></div>
-      <div class="donate-addr"><span class="donate-coin">BCH</span><code class="donate-val">bitcoincash:qqy6axjuy3lt2qacpzc6mwwv89qsysktcqw926azjw</code><button class="donate-copy" data-addr="bitcoincash:qqy6axjuy3lt2qacpzc6mwwv89qsysktcqw926azjw" title="Copy">📋</button></div>
-      <div class="donate-addr"><span class="donate-coin">DGB</span><code class="donate-val">D62HncSW15fmYNzeMJTbpjCtWB3o3htfbQ</code><button class="donate-copy" data-addr="D62HncSW15fmYNzeMJTbpjCtWB3o3htfbQ" title="Copy">📋</button></div>
-      <div class="donate-addr"><span class="donate-coin">LTC</span><code class="donate-val">LL79WZognL1YGBWCnrTLYz73qFgmrJ43pE</code><button class="donate-copy" data-addr="LL79WZognL1YGBWCnrTLYz73qFgmrJ43pE" title="Copy">📋</button></div>
+<!-- Support -->
+<dialog id="donateModal" class="dialog" closedby="any" aria-labelledby="donateTitle">
+  <div class="dlg">
+    <header class="dlg-head"><h2 id="donateTitle">Support development</h2><button type="button" class="icon-btn sm" data-close="donateModal" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></header>
+    <div class="dlg-body">
+      <p class="muted">AxeOS Fleet Manager is free and open source. If it saves you time, a small tip keeps it going.</p>
+      <div class="addr-list">
+        <div class="addr"><span class="addr-coin">BTC</span><code>bc1qdj2fd8lu4h7fvttsx7h0sqt0hlzkhdqyr4nfhc</code><button class="icon-btn sm donate-copy" data-addr="bc1qdj2fd8lu4h7fvttsx7h0sqt0hlzkhdqyr4nfhc" aria-label="Copy BTC address"><svg class="i"><use href="#i-copy"/></svg></button></div>
+        <div class="addr"><span class="addr-coin">BCH</span><code>bitcoincash:qqy6axjuy3lt2qacpzc6mwwv89qsysktcqw926azjw</code><button class="icon-btn sm donate-copy" data-addr="bitcoincash:qqy6axjuy3lt2qacpzc6mwwv89qsysktcqw926azjw" aria-label="Copy BCH address"><svg class="i"><use href="#i-copy"/></svg></button></div>
+        <div class="addr"><span class="addr-coin">DGB</span><code>DQxFiGTekK3QJ1G6AF3rnqxPWZazu5WMB3</code><button class="icon-btn sm donate-copy" data-addr="DQxFiGTekK3QJ1G6AF3rnqxPWZazu5WMB3" aria-label="Copy DGB address"><svg class="i"><use href="#i-copy"/></svg></button></div>
+        <div class="addr"><span class="addr-coin">LTC</span><code>LPW7NAzMjfjL9QPrQKizNqrHgLP7c4W4Cp</code><button class="icon-btn sm donate-copy" data-addr="LPW7NAzMjfjL9QPrQKizNqrHgLP7c4W4Cp" aria-label="Copy LTC address"><svg class="i"><use href="#i-copy"/></svg></button></div>
+      </div>
     </div>
-    <div class="modal-footer"><button class="btn-secondary" data-close="donateModal">Close</button></div>
   </div>
-</div>
+</dialog>
 
-<!-- Tutorial / Setup Wizard -->
-<div id="tutorialOverlay" class="tutorial-overlay hidden">
-  <div class="tutorial-card">
-    <div class="tutorial-step">
-      <div class="tutorial-illust" id="tutIllust"></div>
+<!-- Block found -->
+<dialog id="blockCelebrationModal" class="dialog celebrate" aria-labelledby="bcTitle">
+  <canvas id="confettiCanvas" class="confetti"></canvas>
+  <div class="dlg bc">
+    <div class="bc-trophy"><svg class="i"><use href="#i-trophy"/></svg></div>
+    <h2 id="bcTitle" class="bc-title">Block found</h2>
+    <p class="muted"><strong id="bcDevice">-</strong> just solved a block.</p>
+    <div class="bc-diff"><span class="muted small">Difficulty reached</span><span id="bcDiff">-</span></div>
+    <dl class="bc-meta">
+      <div><dt>Coin</dt><dd id="bcCoin">-</dd></div>
+      <div><dt>When</dt><dd id="bcTime">-</dd></div>
+      <div class="wide"><dt>Pool</dt><dd id="bcPool">-</dd></div>
+    </dl>
+    <div class="btn-row center">
+      <button class="btn" id="bcViewHistory">See all blocks</button>
+      <button class="btn btn-primary" id="bcClose">Keep mining</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Guide -->
+<dialog id="guideModal" class="dialog wide tall" closedby="any" aria-labelledby="guideTitle">
+  <div class="dlg">
+    <header class="dlg-head"><h2 id="guideTitle">Guide</h2><button type="button" class="icon-btn sm" data-close="guideModal" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></header>
+    <div class="guide">
+      <nav class="guide-nav" id="guideNav" aria-label="Guide sections"></nav>
+      <article class="guide-content" id="guideContent"></article>
+    </div>
+  </div>
+</dialog>
+
+<!-- Label editor -->
+<dialog id="labelModal" class="dialog narrow" closedby="any" aria-labelledby="labelTitle">
+  <div class="dlg">
+    <header class="dlg-head"><h2 id="labelTitle">Labels</h2><button type="button" class="icon-btn sm" data-close="labelModal" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></header>
+    <div class="dlg-body" id="labelBody"></div>
+  </div>
+</dialog>
+
+<!-- Icon picker -->
+<dialog id="iconModal" class="dialog narrow" closedby="any" aria-labelledby="iconTitle">
+  <div class="dlg">
+    <header class="dlg-head"><h2 id="iconTitle">Device icon</h2><button type="button" class="icon-btn sm" data-close="iconModal" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></header>
+    <div class="dlg-body"><div class="icon-grid" id="iconGrid"></div></div>
+    <footer class="dlg-foot"><button class="btn sm" id="iconResetBtn">Use the default</button></footer>
+  </div>
+</dialog>
+
+<!-- Confirm -->
+<dialog id="confirmModal" class="dialog narrow" aria-labelledby="confirmTitle">
+  <div class="dlg">
+    <header class="dlg-head"><h2 id="confirmTitle">Are you sure?</h2></header>
+    <div class="dlg-body"><p id="confirmMsg" class="muted"></p></div>
+    <footer class="dlg-foot"><button class="btn" id="confirmCancel">Cancel</button><button class="btn btn-primary" id="confirmOk">Confirm</button></footer>
+  </div>
+</dialog>
+
+<!-- Setup tour -->
+<dialog id="tutorialOverlay" class="dialog tour" aria-labelledby="tutTitle">
+  <div class="dlg">
+    <div class="dlg-body tour-body">
+      <div class="tour-illus" id="tutIllust"></div>
       <h2 id="tutTitle"></h2>
-      <p id="tutDesc"></p>
-      <div id="tutInteractive" class="tut-interactive"></div>
+      <p id="tutDesc" class="muted"></p>
+      <div id="tutInteractive"></div>
     </div>
-    <div class="tutorial-footer">
-      <div class="tutorial-dots" id="tutDots"></div>
-      <div class="tutorial-btns">
-        <button class="btn-secondary btn-sm" id="tutSkip">Skip</button>
-        <button class="btn-primary btn-sm" id="tutNext">Next</button>
-      </div>
-    </div>
+    <footer class="dlg-foot split">
+      <div class="tour-dots" id="tutDots"></div>
+      <div class="btn-row"><button class="btn sm" id="tutSkip">Skip tour</button><button class="btn btn-primary sm" id="tutNext">Next</button></div>
+    </footer>
   </div>
-</div>
+</dialog>
+
+
+<!-- Automation settings -->
+<dialog id="autoModal" class="dialog wide" closedby="any" aria-labelledby="amTitle">
+  <div class="dlg">
+    <header class="dlg-head">
+      <div class="am-head"><span class="ac-icon" id="amIcon"></span><div><h2 id="amTitle">Automation</h2><span class="muted small" id="amDesc"></span></div></div>
+      <div class="btn-row"><label class="switch"><input type="checkbox" id="amEnabled" aria-label="Automation on or off"><span></span></label>
+      <button type="button" class="icon-btn sm" data-close="autoModal" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></div>
+    </header>
+    <div class="dlg-body" id="amBody"></div>
+    <footer class="dlg-foot split"><span id="amStatus" class="ac-status"></span><button class="btn btn-primary" data-close="autoModal">Done</button></footer>
+  </div>
+</dialog>
+
+<!-- Pool directory -->
+<dialog id="catalogModal" class="dialog wide tall" closedby="any" aria-labelledby="catTitle">
+  <div class="dlg">
+    <header class="dlg-head"><div><h2 id="catTitle">Pool directory</h2><span class="muted small">Well-known pools for BitAxe and NerdQAxe. Add one and fill in your wallet.</span></div><button type="button" class="icon-btn sm" data-close="catalogModal" aria-label="Close"><svg class="i"><use href="#i-x"/></svg></button></header>
+    <div class="cat-tools">
+      <input type="search" id="catSearch" class="sm-input" placeholder="Search pools" aria-label="Search pools">
+      <div class="dev-filters" id="catCoins"></div>
+    </div>
+    <div class="dlg-body cat-list" id="catList"></div>
+    <footer class="dlg-foot cat-foot">
+      <div class="cat-source"><span id="catSourceInfo" class="muted small"></span>
+        <details class="cat-details"><summary>Update source</summary>
+          <p class="muted small">Point this at a JSON file you host (for example on GitHub, raw link). The list is checked once a day and whenever you press Update.</p>
+          <div class="input-row"><input type="url" id="catUrl" placeholder="https://raw.githubusercontent.com/you/repo/main/pool-catalog.json" spellcheck="false"><button class="btn sm" id="catUrlSave">Save</button></div>
+        </details>
+      </div>
+      <button class="btn sm" id="catUpdateBtn"><svg class="i"><use href="#i-refresh"/></svg>Update list</button>
+    </footer>
+  </div>
+</dialog>
+
+<!-- Card overflow menu (shared) -->
+<div id="cardMenu" class="popover menu" popover></div>
+
+<!-- Toasts -->
+<div id="toastHost" class="toast-host" popover="manual" aria-live="polite"></div>
 
 <script src="dashboard.js"></script>
 </body>

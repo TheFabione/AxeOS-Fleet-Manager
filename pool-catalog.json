@@ -1,0 +1,24 @@
+{
+  "app": "AxeOS Fleet Manager",
+  "type": "pool-catalog",
+  "version": 1,
+  "updated": "2026-09-30",
+  "pools": [
+    { "id": "public-pool", "coin": "btc", "name": "Public Pool", "host": "public-pool.io", "port": 21496, "type": "solo", "fee": "0%", "region": "Global", "user": "Your BTC address", "site": "https://web.public-pool.io", "note": "AxeOS default. Zero-fee solo pool." },
+    { "id": "ckpool-solo-us", "coin": "btc", "name": "Solo CKPool (US)", "host": "solo.ckpool.org", "port": 3333, "type": "solo", "fee": "2%", "region": "US", "user": "Your BTC address", "site": "https://solo.ckpool.org" },
+    { "id": "ckpool-solo-eu", "coin": "btc", "name": "Solo CKPool (EU)", "host": "eusolo.ckpool.org", "port": 3333, "type": "solo", "fee": "2%", "region": "EU", "user": "Your BTC address", "site": "https://solo.ckpool.org" },
+    { "id": "ckpool-solo-au", "coin": "btc", "name": "Solo CKPool (AU)", "host": "ausolo.ckpool.org", "port": 3333, "type": "solo", "fee": "2%", "region": "AU", "user": "Your BTC address", "site": "https://solo.ckpool.org" },
+    { "id": "atlaspool", "coin": "btc", "name": "AtlasPool", "host": "solo.atlaspool.io", "port": 3333, "type": "solo", "fee": "1.5%", "region": "Global", "user": "Your BTC address", "site": "https://atlaspool.io" },
+    { "id": "noderunners", "coin": "btc", "name": "Noderunners", "host": "pool.noderunners.network", "port": 1337, "type": "solo", "fee": "0%", "region": "EU", "user": "Your BTC address", "site": "https://noderunners.network/en/pool" },
+    { "id": "bitaxe-de", "coin": "btc", "name": "Bitaxe Pool (bitaxe.de)", "host": "stratum.bitaxe.de", "port": 3333, "type": "solo", "fee": "0%", "region": "EU", "user": "Your BTC address", "site": "https://bitaxe.de" },
+    { "id": "solopool-eu-btc", "coin": "btc", "name": "SoloPool.eu BTC", "host": "btc.solopool.eu", "port": 3337, "type": "solo", "fee": "1%", "region": "EU", "user": "Your BTC address", "site": "https://solopool.eu/btc" },
+    { "id": "braiins-solo", "coin": "btc", "name": "Braiins Solo", "host": "solo.stratum.braiins.com", "port": 3333, "type": "solo", "fee": "", "region": "EU", "user": "Your BTC address", "site": "https://braiins.com/pool" },
+    { "id": "ocean", "coin": "btc", "name": "OCEAN", "host": "mine.ocean.xyz", "port": 3334, "type": "pool", "fee": "2%", "region": "Global", "user": "Your BTC address", "site": "https://ocean.xyz", "note": "Pooled, TIDES payouts. Lightning payouts available." },
+    { "id": "braiins-pool", "coin": "btc", "name": "Braiins Pool", "host": "stratum.braiins.com", "port": 3333, "type": "pool", "fee": "", "region": "Global", "user": "Your Braiins username", "site": "https://braiins.com/pool", "note": "Account-based pooled mining." },
+    { "id": "solopool-eu-bch", "coin": "bch", "name": "SoloPool.eu BCH", "host": "bch.solopool.eu", "port": 3333, "type": "solo", "fee": "1%", "region": "EU", "user": "bitcoincash:q… address", "site": "https://solopool.eu/bch" },
+    { "id": "2miners-solo-bch", "coin": "bch", "name": "2Miners Solo BCH", "host": "solo-bch.2miners.com", "port": 9393, "type": "solo", "fee": "1.5%", "region": "Global", "user": "Your BCH address", "site": "https://2miners.com/solo-bch-mining-pool" },
+    { "id": "solopool-eu-dgb", "coin": "dgb", "name": "SoloPool.eu DGB", "host": "dgb.solopool.eu", "port": 3335, "type": "solo", "fee": "1%", "region": "EU", "user": "Your DGB address", "site": "https://solopool.eu/dgb" },
+    { "id": "solopool-eu-xec", "coin": "xec", "name": "SoloPool.eu XEC", "host": "xec.solopool.eu", "port": 3339, "type": "solo", "fee": "1%", "region": "EU", "user": "Your XEC address", "site": "https://solopool.eu/xec" },
+    { "id": "solopool-eu-ppc", "coin": "ppc", "name": "SoloPool.eu PPC", "host": "ppc.solopool.eu", "port": 3341, "type": "solo", "fee": "0.5%", "region": "EU", "user": "Your PPC address", "site": "https://solopool.eu/ppc" }
+  ]
+}

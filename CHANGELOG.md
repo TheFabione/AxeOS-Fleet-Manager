@@ -1,12 +1,142 @@
 # AxeOS Fleet Manager - Changelog
- 
+
+Every release of AxeOS Fleet Manager, newest first.
+
+**Milestones:** v2.1 pool directory and nine automations · v2.0 complete redesign · v1.6 card view modes and Neon Vault/Aurora themes · v1.5 uptime monitor · v1.4 Neon Vault UI · v1.3 live difficulty · v1.2 live logs · v1.1 block detection · v1.0 first stable release
+
+## v2.3.0 - Heat Slowdown, Share Minimum, Share Recording (October 2026)
+
+### Heat slowdown (was VR overheat)
+- The automation now watches the **chip temperature** as well as the voltage regulator. The firmware stops hashing when the chip passes about 70 °C, then starts again once it cools, which loops on a hot miner; the automation steps the miner down before that.
+- New **Watch** setting: chip and VR (default), chip only, VR only. New **Chip limit** (default 67 °C) next to the VR limit (80 °C).
+- The thermal cut-off is also recognised from the chip: a drop to ~0 GH/s within 5 minutes of the chip running within 4 °C of its limit triggers a step.
+- Raising settings back after a cool period now requires both sensors to stay at least 5 degrees under their limits.
+- Existing configurations pick up the new settings automatically; your other values are kept.
+
+### Overheat protection
+- Default limit lowered from 75 °C to 68 °C, under the firmware cut-off. A limit at or above 70 °C shows a warning on the card, because it would never trigger.
+
+### Share difficulty chart
+- **Minimum difficulty**: a new button next to the time range hides every share under a level you choose (`1M`, `500K`, `2.5G`…), with quick picks and a dashed "Your minimum" line on the chart.
+- **Record every share above the minimum**: session bests alone get rare once miners have run for a while. With this on, the dashboard reads each miner's log as it happens and plots every submitted share at or above the minimum, not only new session bests. The miners' pages open in one minimized browser window (one tab per miner, same origin, like the live log); connections reconnect after reboots, the window closes with the dashboard, and the list follows miners going on and offline. Only shares the miner actually submits (at or above the pool target) are recorded.
+- The popover estimates how many shares an hour the fleet will find at the chosen level, and warns when that would overflow the history.
+- Share history now keeps the last 5,000 entries (was 2,000). A share already recorded by the collector is upgraded to "session best" or "best ever" instead of being added twice.
+- Reference labels are drawn above the points, so dense charts stay readable.
+
+### Repository
+- `CLAUDE.md` with project rules for Claude Code, plus two project skills: `/prepare-release` (bump the version and draft the changelog, README badge and release notes) and `/release` (check, build, commit, tag, push and publish the GitHub release).
+- `scripts/build-release.mjs`: checks the project and builds a reproducible release zip with its SHA-256, using only Node.js.
+- `docs/RELEASING.md` describes the release process; `.gitignore` keeps `dist/` out of the repository.
+
+## v2.2.0 - Shares Stalled and VR Overheat Automations (October 2026)
+
+Eleven automations now.
+
+- **New: Shares stalled** - restarts a miner that keeps reporting hashrate but whose accepted and rejected share counters stop moving for the set time (default 10 min), a state a restart clears. The wait is never shorter than 10× the expected time between shares at the current pool difficulty and hashrate, so a high pool difficulty can't cause a false restart. Counter resets after a reboot are handled; cooldown between restarts.
+- **New: VR overheat** - protects against the voltage-regulator thermal cut-off loop, where the miner drops to 0 GH/s to cool, comes back and overheats again. A Watchdog restart doesn't fix that; running slower does.
+  - Triggers when the VR temperature passes your limit (default 80 °C), or when the miner drops to ~0 GH/s within 5 minutes of its VR running close to the limit.
+  - Lowers frequency one step (default 25 MHz); in the default "Frequency, then voltage" mode the core voltage (default 10 mV steps) is lowered only once frequency reaches its floor. "Frequency only" and "Both together" modes are available.
+  - Floors for frequency (default 400 MHz) and voltage (default 1050 mV); snaps to the firmware's frequency/voltage options when it reports them; alerts you once if the miner is still too hot at the floor.
+  - Wait time between steps (default 15 min), optional restart to apply (on by default).
+  - Remembers each miner's original frequency and voltage: **Restore original settings** in the dialog, or let it raise them back one step at a time after the VR has stayed cool for a number of hours (off by default).
+  - NerdQAxe changes send the full writable settings so nothing else is reset.
+- Number fields in automation dialogs are wider (four-digit voltages were cut off).
+
+## v2.1.1 - Pool Type Tags (October 2026)
+- **Solo / Pooled tag for your own pools**: the pool editor has a new optional **Type** choice (Not set, Solo, Pooled) with a one-line explanation of each. The tag appears next to the pool name in Saved pools, just like in the Pool directory.
+- Pools added from the directory keep their type automatically.
+- When you type an address that matches a pool in the directory, its type is suggested (only if you haven't picked one).
+- Existing saved pools show no tag until you edit them and choose a type.
+- The type is kept in pool export / import and in full backups.
+
+## v2.1.0 - Pool Directory, New Automations, Real Share Difficulty (October 2026)
+
+### Pool directory
+- **Pools → Pool directory**: a ready-made list of well-known pools for BitAxe and NerdQAxe (BTC solo pools such as Public Pool, Solo CKPool US/EU/AU, AtlasPool, Noderunners, bitaxe.de, SoloPool.eu, Braiins Solo; pooled OCEAN and Braiins Pool; SHA-256 altcoin pools for BCH, DGB, XEC and PPC). Filter by coin, search, and press **Add**: the pool editor opens with host and port filled in, and your wallet is reused from another saved pool of the same coin.
+- **Updatable list**: the list ships with the extension (`pool-catalog.json`). Point **Update source** at your own hosted JSON (for example a raw GitHub link) and it is checked once a day and whenever you press **Update list**. A newer built-in list takes precedence over an older downloaded one. Entries are validated before use.
+
+### Automations
+- **Redesigned view**: one grid of identical cards (3 columns on desktop, 2 on tablets, 1 on phones). Each card shows its category, a short description, the key settings as chips, the number of miners and a live status line. Switch on from the card; click it to open the settings dialog with an explanation, the fields and the miner picker.
+- **Summary** of how many automations are on and when the last action happened, plus **Recent automation actions** at the bottom.
+- **New: Hashrate drop** - restart, or alert only, when a miner runs more than N% below its normal hashrate (firmware expected hashrate, or 1h average) for a sustained period. Cooldown between actions.
+- **New: Back to primary pool** - restarts a miner that has been on its fallback pool too long, so it reconnects to the primary (uses `isUsingFallbackStratum`, AxeOS 2.x).
+- **New: Reject rate** - alert or restart when rejected shares exceed a percentage over a rolling window (at least 20 shares; counters resetting after a reboot are handled).
+- **New: Quiet hours** - fixed lower fan speed during a time window (overnight windows supported), then each miner's own fan setting is restored. A chip over the safety limit gets its normal fan back immediately and returns to quiet after cooling 5 degrees. Miners already too warm are not quietened. State survives reloads.
+- **New: Daily restart** - restarts the chosen miners once a day at a set time, one every few seconds; skipped (not run late) if the dashboard wasn't open within 30 minutes of that time.
+- "Alert me only" actions always reach you: a desktop notification in the background, a message in front.
+
+### Share difficulty chart, rebuilt
+- **Real values instead of an average**: the old chart plotted accepted shares × pool difficulty per refresh, so a big hit counted like any other share and never stood out. The chart now records every share that beats a miner's session best (detected when `bestSessionDiff` rises between refreshes) at its **exact difficulty**. A new all-time best is a gold dot.
+- **Logarithmic scale**, so 10K and 5G shares are both readable.
+- **Reference lines**: pool floor, session best, best ever and the **Block** line (network difficulty). Lines with the same value share one label.
+- **Tooltips** show the device, time and how far the share was from a block ("0.0033% of a block · 30,238× short").
+- **Time range**: last hour, 24 hours, 7 days or all time. Colour legend per device with hit counts.
+- **Live streaming** uses the same scale: every share as a dot at its real difficulty, filling the chart from the left; the last 30 minutes stay in view.
+- Share hits are stored (up to 2000) and cleared with **Clear chart history**.
+
+### Other
+- Activity log entries made by automations are tagged, so they can be listed separately.
+- Guide updated for the directory, the new automations and the new chart.
+
+## v2.0.0 - Complete Redesign (September 2026)
+
+A ground-up rework of the interface and a round of reliability fixes. All data from 1.x carries over.
+
+### New interface
+- **App shell with four sections**: Fleet, Pools, Automations and History in a side rail, with Guide, Settings and Support at the bottom. On narrow screens the rail becomes a bottom tab bar.
+- **Fleet view**: a large fleet-hashrate readout with 1h and 24h averages, a tabbed chart (Hashrate / Share difficulty) instead of the carousel, six stat tiles, the health strip, and the device list.
+- **New default theme "Circuit"** (graphite and signal amber) and a light theme **"Daylight"**. Neon Vault and Aurora are kept and remapped to the new design tokens. Upgrading from 1.x switches once to Circuit; pick another theme in Settings.
+- **Archivo** variable typeface with condensed numerals for dense readings; monospace for IPs and logs.
+- **Native `<dialog>`s** everywhere (light-dismiss with a fallback for older engines), popovers for menus, toasts instead of `alert()` / `confirm()`.
+- **Device cards**: densities renamed to Compact (one row per device), Standard and Detailed. A single ⋯ menu per card holds rename, labels, icon, open web page, identify (BitAxe), copy IP and remove. Double-click a name to rename it. Offline cards show how long the device has been down.
+- **Settings dialog** (side rail) replaces the scattered top-bar toggles: theme, text size, °C/°F, refresh interval, electricity price, alerts, backup.
+- **Setup tour** rewritten, with scanning built into the second step.
+- **User guide** rewritten for the new layout.
+
+### New features
+- **Device search** (press `/`) across name, IP, model, pool and labels, plus an **Offline** filter chip.
+- **Select mode** with a bulk bar: apply a pool to, restart, or remove several devices at once.
+- **Energy cost** per day (and per month in the tooltip) from your electricity price and currency, and **fleet efficiency** in J/TH. New **Efficiency** sort.
+- **Desktop notifications** when the dashboard is in the background: device offline / back online, block found, automation restarts (each optional). Clicking one focuses the dashboard.
+- **Toolbar badge**: online count in green, or offline count in red, with a live tooltip.
+- **Full backup and restore** of devices, names, labels, icons, pools, automations and settings in one JSON file.
+- **Configurable refresh interval** (5 s to 1 min, default 10 s).
+- **Live log**: line filter, pause that keeps collecting and replays on resume, save to `.txt`, colour-coded errors / warnings / shares.
+- **Hashrate chart** marks moments when devices were offline; axis labels adapt to the data range and show seconds on short spans.
+- **Pools**: "Use" button fills the Apply form, live count of miners currently on each saved pool, per-device status in the Apply list.
+- **Activity log** level filter (All / Actions / Warnings / Errors) and a clear button; downtime history can be cleared.
+- **Keyboard shortcuts**: `/` search, `R` refresh, `1`-`4` switch sections, `?` guide.
+- **Popup** redesigned: fleet hashrate, online count, power, best difficulty and a per-device list. "Open dashboard" focuses an existing dashboard tab instead of opening a duplicate.
+
+### Fixed
+- **Data loss on update**: the service worker's `onInstalled` handler reset storage on every update and reload, wiping the device list. It now only fills in missing defaults and never overwrites existing data.
+- **Flap Recovery settings were not saved**: they were read after the save call. Fixed.
+- **Overheat Protection restart loop**: a device in a hot room could be restarted every poll. It now waits a configurable cooldown (default 10 min) between restarts of the same device. The limit is shown and edited in your chosen temperature unit.
+- **Pool Rotation on NerdQAxe** now sends the full writable settings like the Pool Manager does, so other settings are not reset.
+- Deleting a saved pool also removes it from Pool Rotation.
+- Removing a device now also cleans its nickname, labels, icon, sparkline history, custom-order slot and automation selections.
+- Automation device lists no longer drop offline devices from the selection when saving.
+- Live difficulty chart's time labels in live mode used the wrong series.
+- Text scaling uses a root rem scale instead of `body.style.zoom`, so canvases, popovers and hit targets stay aligned.
+- Charts sit in fixed-height wrappers and cannot grow unbounded.
+- WebSocket session tabs are tracked in `chrome.storage.session` (the service worker can be stopped at any time) and are closed when the dashboard tab that opened them goes away.
+- Waiting for a device tab now also handles a page that finished loading before the listener attached.
+- Imported device placeholders no longer produce a "back online" message the first time they answer.
+
+### Technical
+- Manifest `2.0.0`, new `notifications` permission, `minimum_chrome_version` 116. Chrome asks to re-enable the extension after updating because of the new permission.
+- Service worker message handlers are `async`/`await` throughout.
+
+## v1.6.8 - Final 1.x Build (2026)
+- The last 1.x version and the starting point for the v2 redesign. Its changes compared with v1.6.7 were not recorded in this changelog.
+
 ## v1.6.7 - Theme Picker Polish (May 2026)
 - The theme dropdown no longer shows an empty "Light" group; if all available themes are in a single group, options are listed directly without category labels
 - Sparkline mini-charts in device cards now redraw immediately when you switch themes, instead of waiting for the next refresh to pick up the new colors
-  
+
 ## v1.6.6 - Hotfix (May 2026)
 - **Fixed**: critical bug where hovering over the Fleet Hashrate or Live Difficulty chart caused the chart to grow vertically without bound, eventually filling the screen. Caused by a flex layout conflict with the explicit canvas height; the chart card now uses a stable `min-height` strategy with single-line headers.
-  
+
 ## v1.6.5 - Supra Firmware Support, New Theme (May 2026)
 - **New theme: Aurora** - replaces Solar Light with a second fully designed dark theme. Cyan + magenta + amber on deep midnight navy, distinctly different from Neon Vault while equally polished.
 - **BitAxe Supra firmware support**: the newer Supra firmware only exposes the current hashrate (no `hashRate_1h`/`_10m`/`_1m` fields). The card's 1h and 24h averages now fall back to a rolling average computed locally from the dashboard's own sample buffer, which is now sized for one hour of history.
@@ -44,9 +174,9 @@
 
 ## v1.6.1 - Card View Modes (May 2026)
 - **Three card view modes**: A new toggle in the device controls switches between Minimal, Balanced, and Detailed layouts. Your choice is remembered across sessions.
-- **Minimal**: device name, current hashrate, best difficulty - compact cards for large fleets
-- **Balanced** (default): adds 1h average, session difficulty, temperature (with bar) and fan speed
-- **Detailed**: adds a live hashrate fluctuation sparkline, power, efficiency (J/TH), connected pool, and accepted/rejected shares
+  - **Minimal**: device name, current hashrate, best difficulty - compact cards for large fleets
+  - **Balanced** (default): adds 1h average, session difficulty, temperature (with bar) and fan speed
+  - **Detailed**: adds a live hashrate fluctuation sparkline, power, efficiency (J/TH), connected pool, and accepted/rejected shares
 - All card tools (open, live logs, settings, restart) remain available in every mode
 - Smaller device-name font so long names no longer get truncated
 
@@ -103,7 +233,7 @@
 ## v1.4.0 - Neon Vault UI (May 2026)
 - **Complete visual overhaul** with a vibrant modern-crypto aesthetic
 - New typography: Syne (display), Sora (body), Space Mono (data)
-- Streamlined to two beautifully finished themes: **Neon Vault** (dark) and **Solar Light** (light)
+- Two finished themes: **Neon Vault** (dark) and **Solar Light** (light) [Solar Light replaced by Aurora in v1.6.5]
 - Larger, punchier charts and cards throughout
 
 ## v1.3.1 - Multi-Device Live Difficulty (May 2026)
@@ -122,132 +252,58 @@
 - **New: block detection** - when a device solves a block, a celebration appears with confetti and the block details
 - Navbar trophy button with a counter and full block history (persisted)
 
+## v1.0.0 - v1.0.11 - First Stable Series (early 2026)
+The first stable release and eleven rounds of refinements, published together as v1.0.11. v1.0.3 to v1.0.11 shipped in March-April 2026.
 
-## v1.0.3 – v1.0.11 - Charts & Stability (March–April 2026)
-- **Chart carousel**: Fleet Hashrate and Difficulty Monitor in a swipeable carousel with arrows and dots
-- Difficulty chart reworked to show per-interval difficulty with gradient fill and peak markers
-- Subnet help tooltip on the scan field
-- Theme handling hardened (validation, fallback) and several rendering fixes
-- Various stability fixes to chart history tracking and the coin selector
+### v1.0.11
+- Fixed: the coin selector in the Add Pool form reset to Bitcoin whenever the background refreshed; your choice is now preserved (building on a first fix in v0.99.2)
 
-## v1.0.2 - UX Improvements (March 2026)
-- **Automations panel moved to left**: Now stacked below Pools trigger for consistency (features on the left)
-- **Removed emojis from automation titles**: SVG icons instead, matching Pool Manager style
-- **Card-based automation layout**: Two-column grid with Watchdog and Overheat side by side, Pool Rotation full-width below
-- **Auto-save**: All automation changes save instantly on toggle/input - no more hidden "Save" button
-- **Intro text**: Explains auto-save behavior at the top of the panel
-- **User Guide**: New question-mark button in the topbar opens a comprehensive guide with sidebar navigation. Sections: Getting Started, Device Cards, Pool Manager, Device Settings, Automations, Top Bar Controls
+### v1.0.10 - v1.0.11 - Interactive Live Difficulty
+- The Live Difficulty chart became fully interactive: crosshair on hover, highlighted points, and a tooltip with the total difficulty plus a per-device breakdown (or the pool difficulty in single-device view)
+- Per-device toggle: all devices at once (colour-coded) or a single one
+- Fleet Hashrate chart made taller and more responsive to changes
 
-## v1.0.1 - Automations (March 2026)
-- **Automations panel**: New slide-in panel on the right side (mirror of Pool Manager on left)
-- **Watchdog (Auto-Reboot)**: Automatically restarts devices stuck at 0 GH/s for a configurable time (default 5 minutes). Per-device selection.
-- **Overheat Protection**: Automatically restarts devices when temperature exceeds a configurable threshold (default 75°C). Per-device selection.
-- **Pool Rotation**: Automatically switches between selected saved pools at regular intervals (configurable hours). Supports per-device selection and any number of pools in rotation.
-- **Automation logging**: All automation actions logged with distinctive icons (🐕 watchdog, 🌡 overheat, 🔄 rotation)
-- **Status indicators**: Each automation shows real-time status (active/warning/disabled)
-- **Persistent state**: Automation settings and pool rotation state survive page reloads
-- **Toggle switches**: Clean on/off toggles for each automation
+### v1.0.9
+- Fixed: the Live Difficulty chart was blank and the device dropdown stalled until reload (missing `diffHistory` declaration)
 
-## v1.0.0 - Release (March 2026)
-- Removed auto-fan option for NerdQAxe (deprecated in firmware; manual speed only)
-- Offline device cards now show a subtle red tint matching the active theme
-- Added copy buttons for each donation address
-- Created changelog and features documentation
+### v1.0.7 - v1.0.8
+- Fixed: the extension failed to load for users upgrading from older versions - a stored theme that no longer existed left the UI unstyled and unclickable. The theme is now validated with a safe fallback, and the whole init sequence is hardened so a single failure can't break the dashboard
 
-## v0.99.3
-- **Font scale fix**: Switched from CSS `font-size` to `zoom` - now actually scales all UI elements when pressing Aa+
-- **NerdQAxe auto-fan**: Clarified that auto-fan is deprecated in NerdQAxe firmware (AFC removed). Extension now sends `manualFanSpeed: 100` and shows an informational note
+### v1.0.5 - v1.0.6
+- Subnet help tooltip in onboarding and the scan popover, explaining what a subnet is and how to find yours
+- Fixed (v1.0.6): duplicate tooltip (native + custom) on the subnet help icon
+- Fixed (v1.0.6): canvas sizing when a carousel slide was hidden and had zero dimensions
 
-## v0.99.2
-- **BitAxe fan fix (manual speed)**: Fixed field name - BitAxe firmware expects `manualfanspeed` (lowercase), not `fanSpeed`
-- **NerdQAxe auto-fan**: Separated logic per device type for correct field handling
-- **Rename/label icons**: Replaced small emoji with proper SVG icons (pen + tag) at 15-16px, much more visible
-- **Settings modal pool URL parsing**: Stratum URL fields now auto-strip `stratum+tcp://` and extract port on blur
-- **Separate fallback coin**: Pool manager now allows choosing a different coin for the fallback pool
-- **Pool list compressed to 2**: Saved pools collapse after 2 entries (was 3)
-- **Coin dropdown reset fix**: Pool manager state preserved across dashboard refreshes
-- **°C / °F toggle**: New topbar button to switch temperature units across the entire dashboard
-- **Font scale (Aa+)**: New topbar button to enlarge all dashboard text
-- **Donate button more visible**: Increased opacity, added border and red heart icon
+### v1.0.4 - Six Themes
+- Replaced the old theme set with six designed options. Dark: Tech Midnight (cyan/navy), Slate Neon (purple/charcoal), Material Dark (muted purple/teal). Light: Cloud Cyan, Silk Violet, Paper Teal
+- Default theme set to Tech Midnight
+- Fixed an internal variable-shadowing bug in the chart renderer
 
-## v0.99.1
-- **Tutorial scan feedback**: Added animated spinner during network scan in tutorial, plus a device list showing all discovered devices
-- **New tutorial step**: "Organize with Labels" explaining the label system
-- **Label popup fix**: Popup now opens as a centered fixed modal with backdrop, no longer hidden behind other cards
-- **Saved pools collapsible**: Lists with 3+ pools auto-collapse with gradient fade and "Show all" toggle
-- **Chart history persistence**: Hashrate chart data saved to storage, survives page reloads
-- **Rename/label icons larger**: Increased from 11px to 14px with better opacity
+### v1.0.3 - Live Difficulty Chart
+- **New: Live Difficulty chart** in a swipeable carousel alongside Fleet Hashrate (arrows and dots)
+- Plots the difficulty produced per interval (new shares × pool difficulty), with gradient area fill and highlighted peaks
+- Fixed: User Guide content collapsing below the navigation
+- Fixed: saved pools list scrolling when more than two pools are saved, without shrinking the apply section
+- Updated LTC and DGB donation wallets
 
-## v0.99.0
-- **Removed Debug API button** and modal
-- **Removed Update tab** from device settings (OTA via official channels)
-- **Device type icon in cards**: SVG chip (BitAxe, orange) or board (NerdQAxe, blue) next to device name
-- **Custom labels**: Up to 2 colored labels per device (8 colors, 10 char max), with label-based filtering
-- **Chart online/offline tracking**: Tooltip shows device count; offline events logged automatically
-- **Pool apply progress bar**: Visual progress + per-device status icons (⏳ → ✅/❌)
-- **Fan settings fix**: Added `manualFanSpeed` for NerdQAxe, `frequency` alias for mining settings
+### v1.0.2 - User Guide
+- **New: in-app User Guide** from a help button in the top bar, with sidebar navigation: Getting Started, Device Cards, Pool Manager, Device Settings, Automations, Top Bar Controls
 
-## v0.9.0 (pre-release, internal "v1.4")
-- **Card redesign**: Hero layout with hashrate (GH/s), best diff, temperature as primary stats
-- **Secondary stats row**: 1h Avg, 24h Avg, Session Best visible without expanding
-- **Expand bug fix**: Added `align-items: start` to device grid so cards expand independently
-- **Scan bar → topbar icon**: Network scan moved to popover dropdown behind 🔍 icon
-- **Sort lock button**: Padlock icon to freeze custom device order
-- **"Donate" text**: Added label next to heart icon
-- **Tutorial interactive setup**: Scan/add devices directly from tutorial wizard
+### v1.0.1 - v1.0.2 - Automations
+- **Watchdog (auto-reboot)**: restarts any device stuck at 0 GH/s past a configurable timeout (default 5 minutes), per device
+- **Overheat protection**: restarts devices above a temperature threshold (default 75 °C), per device
+- **Pool rotation**: cycles selected devices through saved pools at an interval in hours; rotation state persists across reloads
+- Settings save instantly, with live status indicators and activity logging for every action
+- Automations panel stacked under Pools in a two-column card layout
 
-## v0.8.0 (pre-release, internal "v1.0/CSRF fix")
-- **CSRF 401 fix - Tab Injection**: All write operations (PATCH, restart, identify) now use `chrome.scripting.executeScript` to inject fetch calls into a background tab opened to the device. This runs same-origin with the device's session cookie, bypassing the CSRF protection that blocked direct cross-origin requests from the extension
-- **Permissions**: Added `scripting` and `tabs` to manifest for tab injection
-- **Background.js simplified**: Only handles read-only operations (scan, info); all writes go through DEVICE_WRITE tab injection handler
+### v1.0.0 - First Stable Release
+- Scan the local network for BitAxe and NerdQAxe devices and monitor hashrate and difficulty in real time
+- Switch pools across several devices at once
+- **Automatic CSRF handling**: writes (pool changes, restarts) run through the device's own session, so they work without 401 errors
+- Chart history persists across page reloads
+- Donation addresses with one-click copy buttons
+- Offline cards get a subtle red tint matching the active theme
+- NerdQAxe: automatic fan control removed from the UI (deprecated in firmware); manual speed remains
 
-## v0.7.0 (pre-release, internal "v1.3.1 pool fix")
-- **Pool apply rewrite**: GET-then-merge-then-PATCH for NerdQAxe (preserves voltage/frequency settings); minimal payload for BitAxe
-- **Device-specific field names**: NerdQAxe uses `stratumEnonceSubscribe`, BitAxe uses `stratumExtranonceSubscribe`
-- **Read-only field removal**: NerdQAxe PATCH strips 30+ read-only fields before sending
-- **Restart with body**: POST `/api/system/restart` with `{}` body
-- **Worker suffix auto-append**: Pool manager adds device name to wallet address (e.g., `wallet.devicename`)
-- **Smart URL parsing**: `stratum+tcp://host:port` auto-stripped and port extracted
-
-## v0.6.0 (pre-release, internal "v1.3.1")
-- **Device sorting**: 7 sort criteria (hashrate, best diff, uptime, IP, name, temp, custom)
-- **Drag-and-drop reorder**: Manual device card ordering in custom sort mode
-- **2-column pool device list**: Grid layout with type-specific icons in pool manager
-- **Color-representative theme icons**: Emoji icons matching each theme's accent color
-- **CSP fix**: Extracted inline popup script to external `popup.js` (Manifest V3 compliance)
-
-## v0.5.0 (pre-release, internal "v1.3")
-- **Single-page layout**: Replaced tab navigation with unified dashboard
-- **Floating activity log**: Chat-bubble FAB with unread badge, slide-up log panel
-- **Slide-in pool panel**: Left-side slide panel for pool management
-- **Interactive hashrate chart**: Canvas chart with hover tooltips, crosshair, dynamic Y-axis
-- **Device dashboard links**: 🌐 button opens device's local web UI
-- **Expanded state persistence**: Device card expand/collapse survives page reload
-- **Fallback pool dropdown**: Select fallback from saved pools
-- **New logo**: Custom SVG axe-cross diamond mark
-- **First-run tutorial**: 5-step setup wizard with dots navigation
-- **Smooth animations**: Card entrance, panel slide, fade-in transitions
-
-## v0.4.0 (pre-release, internal "v1.2")
-- **Manual IP input**: Add devices by IP address without scanning
-- **10-theme system**: 5 dark (Midnight Orange, Cyber Green, Deep Purple, Crimson Night, Arctic Blue) + 5 light (Clean Amber, Mint Fresh, Soft Lavender, Paper Rose, Sky Slate)
-- **SHA-256 coin list**: 16 coins including BTC, BCH, BSV, XEC, DGB, SYS, NMC, and more
-- **Theme persistence**: Selected theme saved and restored
-
-## v0.3.0 (pre-release, internal "v1.1")
-- **Device settings modal**: Tabbed interface (General, Fan, Mining, Pool, Update)
-- **Fan control**: Auto/manual speed slider
-- **Mining settings**: Frequency and voltage adjustment
-- **Pool settings**: Primary + fallback pool configuration
-- **OTA updates**: GitHub auto-update (NerdQAxe), manual firmware/web UI upload
-- **Device identify**: Flash LED via API
-- **Device remove**: Remove from dashboard
-- **Activity log**: Timestamped log with level badges
-
-## v0.2.0 (pre-release, internal "v1.0")
-- **Network scanner**: Subnet-based device discovery (192.168.x.0/24)
-- **Device cards**: Hashrate, temperature, power, fan, best diff display
-- **Pool manager**: Save, edit, delete mining pool configurations
-- **Background service worker**: API communication layer
-- **Extension popup**: Quick stats (device count, total hashrate) with dashboard link
-- **Manifest V3**: Chrome extension with `storage` and `host_permissions`
+## Pre-1.0 (v0.99.x)
+- Development builds before the first stable release. v0.99.2 included a first fix for the pool coin selector resetting during background refreshes

@@ -1,0 +1,13 @@
+# Release build output (see docs/RELEASING.md)
+dist/
+
+# Personal Claude Code settings
+.claude/settings.local.json
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+node_modules/
